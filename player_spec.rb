@@ -16,4 +16,13 @@ describe Player do
 
     expect(input).to have_received(:next_move)
   end
+
+  it "returns a Move when asked for it" do
+    input = double("Input", :next_move => 6)
+    player = Player.new("X", input)
+    move = player.next_move
+
+    expect(move.symbol).to eq "X"
+    expect(move.location).to eq 6
+  end
 end

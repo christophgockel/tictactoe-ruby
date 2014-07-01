@@ -2,8 +2,9 @@ require 'rspec'
 
 require 'game'
 
+
 describe Game do
-  it "can't be started with not enough players" do
+  it "can't be started without enough players" do
     game = Game.new
     expect { game.start }.to raise_error(Game::InsufficientPlayers)
   end

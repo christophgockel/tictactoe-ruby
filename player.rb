@@ -1,3 +1,5 @@
+require 'board'
+
 class Player
   X = "x"
   O = "o"
@@ -10,6 +12,6 @@ class Player
   end
 
   def next_move
-    @input.next_move
+    Move.new(@symbol, @input.next_move)
   end
 end
