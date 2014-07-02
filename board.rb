@@ -37,4 +37,20 @@ class Board
 
     columns
   end
+
+  def diagonals
+    diagonals = []
+    diagonal_1 = []
+    diagonal_2 = []
+
+    rows.each_with_index do |row, row_index|
+      diagonal_1 << row[row_index]
+      diagonal_2 << row[-1 - row_index]
+    end
+
+    diagonals << diagonal_1
+    diagonals << diagonal_2
+
+    diagonals
+  end
 end

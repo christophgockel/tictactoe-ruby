@@ -1,5 +1,6 @@
 require 'rspec'
 
+require 'spec_helper'
 require 'board'
 
 
@@ -27,18 +28,13 @@ describe Board do
     expect(board.columns).to eq [['1', '1', '1'], ['2', '2', '2'], ['3', '3', '3']]
   end
 
+  it 'can return its diagonals' do
+    board = board_with('123456789')
+    expect(board.diagonals).to eq [['1', '5', '9'], ['3', '5', '7']]
+  end
+
 
   def some_move
     Move.new('x', 0)
-  end
-
-  def board_with(contents)
-    board = Board.new
-
-    contents.split('').each_with_index do |symbol, index|
-      board.set(Move.new(symbol, index))
-    end
-
-    board
   end
 end
