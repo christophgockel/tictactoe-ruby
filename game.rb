@@ -8,6 +8,10 @@ class Game
     Game.new(players)
   end
 
+  def self.prepare_new(players, display)
+    Game.new(players, Board.new, Rules.new, display)
+  end
+
   def initialize(players, board = nil, rules = nil, display = nil)
     @players = players
     @board   = board

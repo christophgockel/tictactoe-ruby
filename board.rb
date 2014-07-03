@@ -5,11 +5,11 @@ class Board
   attr_reader :cells
 
   def initialize
-    @cells = []
+    @cells = Array.new(SIZE * SIZE) { nil }
   end
 
   def empty?
-    cells.empty?
+    cells.all? { |e| e.nil? }
   end
 
   def set(move)
