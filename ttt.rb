@@ -17,6 +17,7 @@ class StandardOutput
     content = board.rows.map.with_index do |row, row_index|
       row.map.with_index { |cell, column_index| cell || (row_index*row.length) + column_index }.join(' | ')
     end.join("\n---------\n")
+
     puts content
   end
 end
@@ -26,4 +27,4 @@ o = Player.O(StandardInput.new)
 
 game = Game.prepare_new([x, o], StandardOutput.new)
 
-game.start
+puts 'winner is: ' + game.start

@@ -27,6 +27,9 @@ class Game
       place_move_of(players.first)
       switch_players
     end while game_is_ongoing
+    display_board
+
+    rules.winner(board)
   end
 
   def game_is_ongoing

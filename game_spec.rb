@@ -59,9 +59,14 @@ describe Game do
     @game.start
   end
 
-  it 'pushes the board to a display for each round' do
-    expect(display).to receive(:show_contents).with(board).exactly(3).times
+  it 'pushes the board to a display for each round plus at the end of a game' do
+    expect(display).to receive(:show_contents).with(board).exactly(4).times
 
     @game.start
+  end
+
+  it 'returns the winner when done' do
+    allow(rules).to receive(:winner).and_return(Player::O)
+    expect(@game.start).to eq(Player::O)
   end
 end
