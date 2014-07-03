@@ -2,29 +2,35 @@ require 'board'
 require 'rules'
 
 class Game
-  attr_reader :players, :board, :rules
+  attr_reader :players, :board, :rules, :display
 
   def self.with_players(players)
     Game.new(players)
   end
 
-  def initialize(players, board = nil, rules = nil)
+  def initialize(players, board = nil, rules = nil, display = nil)
     @players = players
-    @board = board
-    @rules = rules
+    @board   = board
+    @rules   = rules
+    @display = display
   end
 
   def start
-    ensure_enough_players
+    begin
+      ensure_enough_players
 
-    while game_is_ongoing
+      display_board
       place_move_of(players.first)
       switch_players
-    end
+    end while game_is_ongoing
   end
 
   def game_is_ongoing
     !rules.has_winner?(board)
+  end
+
+  def display_board
+    display.show_contents(board)
   end
 
   def place_move_of(player)
