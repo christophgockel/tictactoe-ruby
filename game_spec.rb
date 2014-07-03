@@ -36,6 +36,11 @@ describe Game do
     expect(player_x).to have_received(:next_move).exactly(2).times
   end
 
+  it 'passes the board when asking a player for a move' do
+    @game.start
+    expect(player_x).to have_received(:next_move).with(board).at_least(:once)
+  end
+
   it 'places player moves on board' do
     board = double
     game = Game.new([player_x, player_o], board)

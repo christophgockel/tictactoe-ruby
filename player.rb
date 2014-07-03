@@ -19,7 +19,7 @@ class Player
     @input = input
   end
 
-  def next_move
+  def next_move(board)
     Move.new(@symbol, @input.next_move)
   end
 end

@@ -4,6 +4,8 @@ require 'player'
 
 
 describe Player do
+  let(:dummy_board) { double }
+
   it "has a symbol" do
     player = Player.new("X")
     expect(player.symbol).to eq "X"
@@ -12,7 +14,7 @@ describe Player do
   it "asks an input object to get its next move" do
     input = double("Input", :next_move => 42)
     player = Player.new("X", input)
-    player.next_move
+    player.next_move(dummy_board)
 
     expect(input).to have_received(:next_move)
   end
@@ -20,7 +22,7 @@ describe Player do
   it "returns a Move when asked for it" do
     input = double("Input", :next_move => 6)
     player = Player.new("X", input)
-    move = player.next_move
+    move = player.next_move(dummy_board)
 
     expect(move.symbol).to eq "X"
     expect(move.location).to eq 6

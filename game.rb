@@ -41,7 +41,7 @@ class Game
   end
 
   def place_move_of(player)
-    board.set(player.next_move)
+    board.set(player.next_move(board))
   end
 
   def switch_players
