@@ -53,4 +53,16 @@ class Board
 
     diagonals
   end
+
+  def free_spots
+    spots = []
+
+    rows.each_with_index do |row, row_index|
+      row.each_with_index do |cell, column_index|
+        spots << (row_index * SIZE + column_index) if cell.nil?
+      end
+    end
+
+    spots
+  end
 end

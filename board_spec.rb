@@ -33,6 +33,10 @@ describe Board do
     expect(board.diagonals).to eq [['1', '5', '9'], ['3', '5', '7']]
   end
 
+  it 'knows free spots' do
+    expect(board_with('x oxxo  x').free_spots).to eq [1, 6, 7]
+  end
+
 
   def some_move
     Move.new('x', 0)
