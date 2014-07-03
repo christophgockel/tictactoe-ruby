@@ -25,4 +25,9 @@ describe Player do
     expect(move.symbol).to eq "X"
     expect(move.location).to eq 6
   end
+
+  it 'has factory methods for creating a specific player' do
+    expect(Player.X.symbol).to eq Player::X
+    expect(Player.O.symbol).to eq Player::O
+  end
 end

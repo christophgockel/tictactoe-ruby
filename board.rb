@@ -1,7 +1,7 @@
 Move = Struct.new(:symbol, :location)
 
 class Board
-  BOARD_SIZE = 3
+  SIZE = 3
   attr_reader :cells
 
   def initialize
@@ -19,7 +19,7 @@ class Board
   def rows
     rows = []
 
-    cells.each_slice(BOARD_SIZE) do |element|
+    cells.each_slice(SIZE) do |element|
       rows << element
     end
 
@@ -29,7 +29,7 @@ class Board
   def columns
     columns = []
 
-    BOARD_SIZE.times do |column|
+    SIZE.times do |column|
       columns << rows.map do |row|
         row[column]
       end
