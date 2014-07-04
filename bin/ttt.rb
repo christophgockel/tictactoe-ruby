@@ -2,6 +2,7 @@ require 'game'
 require 'player'
 require 'board'
 
+
 class StandardInput
   def next_move
     puts "\nWhat's your next move?"
@@ -23,6 +24,9 @@ end
 x = Player.X(StandardInput.new)
 o = Player.O(StandardInput.new)
 
-game = Game.prepare_new([x, o], StandardOutput.new)
+begin
+  game = Game.prepare_new([x, o], StandardOutput.new)
 
-puts 'winner is: ' + game.start
+  puts 'winner is: ' + game.start
+rescue Interrupt
+end
