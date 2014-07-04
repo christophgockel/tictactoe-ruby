@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+current_directory=$(dirname $0)
+
+ruby -I$current_directory/../lib $current_directory/ttt.rb

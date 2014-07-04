@@ -1,8 +1,6 @@
-$LOAD_PATH.unshift File.dirname(__FILE__)
-
-require './game'
-require './player'
-require './board'
+require 'game'
+require 'player'
+require 'board'
 
 class StandardInput
   def next_move
