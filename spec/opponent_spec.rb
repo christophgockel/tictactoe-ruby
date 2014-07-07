@@ -3,17 +3,34 @@ require 'opponent'
 describe Opponent do
   let(:opponent) { Opponent.new }
   let(:x) { Player::X }
+  let(:o) { Player::O }
 
   it 'blocks possible wins for every row' do
     expect(next_move_for(x).in(' oo      ')).to eq 0
     expect(next_move_for(x).in('o o      ')).to eq 1
     expect(next_move_for(x).in('oo       ')).to eq 2
+
     expect(next_move_for(x).in('    oo   ')).to eq 3
     expect(next_move_for(x).in('   o o   ')).to eq 4
     expect(next_move_for(x).in('   oo    ')).to eq 5
+
     expect(next_move_for(x).in('       oo')).to eq 6
     expect(next_move_for(x).in('      o o')).to eq 7
     expect(next_move_for(x).in('      oo ')).to eq 8
+  end
+
+  it 'blocks possible wins for every column' do
+    expect(next_move_for(o).in('   x  x  ')).to eq 0
+    expect(next_move_for(o).in('x     x  ')).to eq 3
+    expect(next_move_for(o).in('x  x     ')).to eq 6
+
+    expect(next_move_for(o).in('    x  x ')).to eq 1
+    expect(next_move_for(o).in(' x     x ')).to eq 4
+    expect(next_move_for(o).in(' x  x    ')).to eq 7
+
+    expect(next_move_for(o).in('     x  x')).to eq 2
+    expect(next_move_for(o).in('  x     x')).to eq 5
+    expect(next_move_for(o).in('  x  x   ')).to eq 8
   end
 
 

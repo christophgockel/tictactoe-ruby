@@ -6,9 +6,12 @@ class Opponent
 
   RatedMove = Struct.new(:score, :location)
 
+  def initialize
+    @rules = Rules.new
+  end
+
   def next_move(player, board)
     @player = player
-    @rules = Rules.new
 
     best_move_for(board)
   end
@@ -28,7 +31,7 @@ class Opponent
 
     board.free_spots.each do |index|
       board.set(Move.new(player, index))
-      score = -1 * negamax(board, -beta, -alpha, opponent(player)).score
+      score = -negamax(board, -beta, -alpha, opponent(player)).score
       board.undo(index)
 
       if score > best_score
@@ -49,32 +52,21 @@ class Opponent
   end
 
   def opponent(player)
-    if player == Player::O
-      return Player::X
-    else
-      return Player::O
-    end
+    player == Player::X ? Player::O : Player::X
   end
 
   def score(board, player)
     moves_made = board.rows.flatten.size - board.free_spots.size
     winner = rules.winner(board)
 
-    case winner
-    when Player::X
-      if player == Player::X
-        return 1.0 / moves_made
-      else
-        return -1.0 / moves_made
-      end
-    when Player::O
-      if player == Player::X
-        return -1.0 / moves_made
-      else
-        return 1.0 / moves_made
-      end
-    else
-      return 0.0
+    return 0.0 if winner.nil?
+
+    score = 1.0 / moves_made
+
+    if player != winner
+      score = -score
     end
+
+    return score
   end
 end
