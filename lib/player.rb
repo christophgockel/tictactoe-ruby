@@ -20,6 +20,6 @@ class Player
   end
 
   def next_move(board)
-    Move.new(@symbol, @input.next_move)
+    Move.new(@symbol, @input.next_move(self, board))
   end
 end

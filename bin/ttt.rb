@@ -1,10 +1,11 @@
 require 'game'
 require 'player'
+require 'opponent'
 require 'board'
 
 
 class StandardInput
-  def next_move
+  def next_move(player, board)
     puts "\nWhat's your next move?"
     gets.chomp.to_i
   end
@@ -22,7 +23,7 @@ class StandardOutput
 end
 
 x = Player.X(StandardInput.new)
-o = Player.O(StandardInput.new)
+o = Player.O(Opponent.new)
 
 begin
   game = Game.prepare_new([x, o], StandardOutput.new)

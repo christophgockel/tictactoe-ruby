@@ -16,7 +16,7 @@ describe Player do
     player = Player.new("X", input)
     player.next_move(dummy_board)
 
-    expect(input).to have_received(:next_move)
+    expect(input).to have_received(:next_move).with(player, dummy_board)
   end
 
   it "returns a Move when asked for it" do
