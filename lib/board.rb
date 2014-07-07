@@ -16,6 +16,10 @@ class Board
     cells[move.location] = move.symbol
   end
 
+  def undo(index)
+    cells[index] = nil
+  end
+
   def rows
     rows = []
 

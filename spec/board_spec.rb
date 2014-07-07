@@ -37,6 +37,14 @@ describe Board do
     expect(board_with('x oxxo  x').free_spots).to eq [1, 6, 7]
   end
 
+  it 'moves can be undone' do
+    board = Board.new
+    board.set(Move.new('x', 3))
+    board.undo(3)
+
+    expect(board.empty?).to be true
+  end
+
 
   def some_move
     Move.new('x', 0)
