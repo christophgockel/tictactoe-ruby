@@ -44,6 +44,12 @@ describe Board do
     expect(board.empty?).to be true
   end
 
+  it 'knows how many moves were made' do
+    board = Board.new
+    board.set(some_move)
+
+    expect(board.moves_made).to eq(1)
+  end
 
   def some_move
     Move.new('x', 0)

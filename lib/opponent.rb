@@ -11,32 +11,36 @@ class Opponent
   end
 
   def next_move(player, board)
-    @player = player
+    @player = player.symbol
 
-    best_move_for(board)
+    best_move(board)
   end
 
 
-  def best_move_for(board)
-    negamax(board, -1, 1, player).location
+  def best_move(board)
+    move = negamax(board, -1, 1, player)
+    return move.location
   end
 
-  def negamax(board, alpha, beta, player)
+  def negamax(board, alpha, beta, symbol)
+    opponent = opponent(symbol)
     best_move = -1
     best_score = -1
 
-    if rules.has_winner?(board)
-      return RatedMove.new(score(board, player), best_move)
+    if board.free_spots.size == 0 || rules.has_winner?(board)
+      return RatedMove.new(score(board, symbol), best_move)
     end
 
-    board.free_spots.each do |index|
-      board.set(Move.new(player, index))
-      score = -negamax(board, -beta, -alpha, opponent(player)).score
-      board.undo(index)
+    locations = board.free_spots
+
+    locations.each do |location|
+      board.set(Move.new(symbol, location))
+      score = -negamax(board, -beta, -alpha, opponent).score
+      board.undo(location)
 
       if score > best_score
         best_score = score
-        best_move = index
+        best_move = location
       end
 
       if score > alpha
@@ -51,22 +55,32 @@ class Opponent
     return RatedMove.new(best_score, best_move)
   end
 
-  def opponent(player)
-    player == Player::X ? Player::O : Player::X
-  end
-
-  def score(board, player)
-    moves_made = board.rows.flatten.size - board.free_spots.size
-    winner = rules.winner(board)
-
-    return 0.0 if winner.nil?
-
-    score = 1.0 / moves_made
-
-    if player != winner
-      score = -score
+  def opponent(symbol)
+    if symbol == Player::X
+      return Player::O
     end
 
-    return score
+    return Player::X
+  end
+
+  def score(board, symbol)
+    state = rules.winner(board)
+    move_count = board.moves_made
+
+    if state == Player::X
+      if symbol == Player::X
+        return 1.0 / move_count
+      else
+        return -1.0 / move_count
+      end
+    elsif state == Player::O
+      if symbol == Player::X
+        return -1.0 / move_count
+      else
+        return 1.0 / move_count
+      end
+    else
+      return 0.0
+    end
   end
 end

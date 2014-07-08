@@ -69,4 +69,8 @@ class Board
 
     spots
   end
+
+  def moves_made
+    rows.flatten.size - free_spots.size
+  end
 end
