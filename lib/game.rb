@@ -61,7 +61,7 @@ class Game
     end
   end
 
-  class InsufficientAmountOfPlayers < Exception
+  class InsufficientAmountOfPlayers < RuntimeError
   end
 
   private

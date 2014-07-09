@@ -43,7 +43,7 @@ class Board
     winning_constellations.any? { |row| row.all? { |cell| cell == color } }
   end
 
-  class IllegalMove < RuntimeError; end
+  class IllegalMove < ArgumentError; end
 
   private
 
