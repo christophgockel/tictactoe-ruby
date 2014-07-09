@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 require 'opponent'
 
 describe Opponent do

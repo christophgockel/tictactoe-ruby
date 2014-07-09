@@ -6,9 +6,9 @@ require 'player'
 describe Player do
   let(:dummy_board) { double }
 
-  it "has a symbol" do
+  it "has a mark" do
     player = Player.new("X")
-    expect(player.symbol).to eq "X"
+    expect(player.mark).to eq "X"
   end
 
   it "asks an input object to get its next move" do
@@ -24,12 +24,12 @@ describe Player do
     player = Player.new("X", input)
     move = player.next_move(dummy_board)
 
-    expect(move.symbol).to eq "X"
+    expect(move.mark).to eq "X"
     expect(move.location).to eq 6
   end
 
   it 'has factory methods for creating a specific player' do
-    expect(Player.X.symbol).to eq Player::X
-    expect(Player.O.symbol).to eq Player::O
+    expect(Player.X.mark).to eq Player::X
+    expect(Player.O.mark).to eq Player::O
   end
 end

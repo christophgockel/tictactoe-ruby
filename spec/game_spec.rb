@@ -9,16 +9,15 @@ describe Game do
   let(:player_x) { Player.X }
   let(:player_o) { Player.O }
   let(:board)    { Board.new }
-  let(:rules)    { Rules.new }
   let(:display)  { double }
 
   before(:each) do
-    allow(player_x).to receive(:next_move).and_return(Move.new(Player::X, 1))
-    allow(player_o).to receive(:next_move).and_return(Move.new(Player::O, 2))
-    allow(rules).to receive(:has_winner?).and_return(false, false, true)
+    allow(player_x).to receive(:next_move).and_return(Player::Move.new(Player::X, 1))
+    allow(player_o).to receive(:next_move).and_return(Player::Move.new(Player::O, 2))
+    allow(board).to receive(:is_completed?).and_return(false, false, true)
     allow(display).to receive(:show_contents)
 
-    @game = Game.new([player_x, player_o], board, rules, display)
+    @game = Game.new([player_x, player_o], board, display)
   end
 
   it 'can not be started without enough players' do
@@ -27,13 +26,9 @@ describe Game do
   end
 
   it 'needs two players to be started' do
-    game = Game.new([double.as_null_object, double.as_null_object], board, rules, display)
+    allow(board).to receive(:has_winner?).and_return(true, false, false, true)
+    game = Game.new([double.as_null_object, double.as_null_object], board, display)
     expect { game.start }.not_to raise_error
-  end
-
-  it 'asks the players for moves' do
-    @game.start
-    expect(player_x).to have_received(:next_move).exactly(2).times
   end
 
   it 'passes the board when asking a player for a move' do
@@ -45,18 +40,19 @@ describe Game do
     board = double
     game = Game.new([player_x, player_o], board)
 
-    expect(board).to receive(:set).with(kind_of(Move))
+    expect(board).to receive(:set_move).with(Player::X, 1)
     game.place_move_of(player_x)
   end
 
   it 'runs until done' do
-    expect(rules).to receive(:has_winner?).exactly(3).times
+    allow(board).to receive(:is_completed?).and_return(false, false, true)
+    expect(board).to receive(:is_completed?).exactly(3).times
 
     @game.start
   end
 
   it 'is asking players consecutively for moves' do
-    allow(rules).to receive(:has_winner?).and_return(false, true)
+    allow(board).to receive(:is_completed?).and_return(false, true)
 
     expect(player_x).to receive(:next_move).exactly(1).times
     expect(player_o).to receive(:next_move).exactly(1).times
@@ -71,7 +67,7 @@ describe Game do
   end
 
   it 'returns the winner when done' do
-    allow(rules).to receive(:winner).and_return(Player::O)
+    allow(board).to receive(:winner?).and_return(Player::O)
     expect(@game.start).to eq(Player::O)
   end
 end

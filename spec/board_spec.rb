@@ -3,27 +3,25 @@ require 'spec_helper'
 require 'board'
 
 describe Board do
+  let(:board) { Board.new }
+
   it 'is empty when just created' do
-    board = Board.new
     expect(board.empty?).to be true
   end
 
   it 'is not empty when it got a move placed' do
-    board = Board.new
     board.set_move(1, 'o')
 
     expect(board.empty?).to be false
   end
 
   it 'knows how many moves were made' do
-    board = Board.new
     board.set_move(2, 'x')
 
     expect(board.moves_made).to eq(1)
   end
 
   it 'moves can be undone' do
-    board = Board.new
     board.set_move(3, 'x')
     board.unset_move(3)
 
@@ -44,8 +42,6 @@ describe Board do
   end
 
   context 'Move constellations' do
-    let(:board) { Board.new }
-
     it 'knows when there is a winning row' do
       expect(board_with('xxx      ').has_winner?).to eq true
       expect(board_with('   xxx   ').has_winner?).to eq true
@@ -81,9 +77,8 @@ describe Board do
     end
 
     it 'knows when it is completed' do
-      board = board_with('ooxxxooxo')
-
-      expect(board.is_completed?).to eq true
+      expect(board_with('ooxxxooxo').is_completed?).to eq true
+      expect(board_with('         ').is_completed?).to eq false
     end
   end
 end

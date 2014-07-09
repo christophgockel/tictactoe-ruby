@@ -1,17 +1,12 @@
 require 'player'
-require 'rules'
 
 class Opponent
-  attr_reader :player, :rules
+  attr_reader :player
 
   RatedMove = Struct.new(:score, :location)
 
-  def initialize
-    @rules = Rules.new
-  end
-
   def next_move(player, board)
-    @player = player.symbol
+    @player = player.mark
 
     best_move(board)
   end
@@ -21,21 +16,21 @@ class Opponent
     return move.location
   end
 
-  def negamax(board, alpha, beta, symbol)
-    opponent = opponent(symbol)
+  def negamax(board, alpha, beta, mark)
+    opponent = opponent(mark)
     best_move = -1
     best_score = -1
 
-    if rules.is_done?(board)
-      return RatedMove.new(score(board, symbol), best_move)
+    if board.is_completed?
+      return RatedMove.new(score(board, mark), best_move)
     end
 
-    locations = board.free_spots
+    locations = board.free_locations
 
     locations.each do |location|
-      board.set(Move.new(symbol, location))
+      board.set_move(location, mark)
       score = -negamax(board, -beta, -alpha, opponent).score
-      board.undo(location)
+      board.unset_move(location)
 
       if score > best_score
         best_score = score
@@ -54,21 +49,20 @@ class Opponent
     return RatedMove.new(best_score, best_move)
   end
 
-  def opponent(symbol)
-    if symbol == Player::X
+  def opponent(mark)
+    if mark == Player::X
       Player::O
     else
       Player::X
     end
   end
 
-  def score(board, symbol)
-    winner = rules.winner(board)
+  def score(board, mark)
     move_count = board.moves_made
 
-    if winner == symbol
+    if board.winner?(mark)
       return 1.0 / move_count
-    elsif winner == opponent(symbol)
+    elsif board.winner?(opponent(mark))
       return -1.0 / move_count
     else
       return 0.0

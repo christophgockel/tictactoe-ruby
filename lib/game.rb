@@ -1,21 +1,20 @@
+require 'player'
 require 'board'
-require 'rules'
 
 class Game
-  attr_reader :players, :board, :rules, :display
+  attr_reader :players, :board, :display
 
   def self.with_players(players)
     Game.new(players)
   end
 
   def self.prepare_new(players, display)
-    Game.new(players, Board.new, Rules.new, display)
+    Game.new(players, Board.new, display)
   end
 
-  def initialize(players, board = nil, rules = nil, display = nil)
+  def initialize(players, board = nil, display = nil)
     @players = players
     @board   = board
-    @rules   = rules
     @display = display
   end
 
@@ -29,11 +28,11 @@ class Game
     end while game_is_ongoing
     display_board
 
-    rules.winner(board)
+    winner_of_game
   end
 
   def game_is_ongoing
-    !rules.has_winner?(board)
+    board.is_completed? == false
   end
 
   def display_board
@@ -41,11 +40,25 @@ class Game
   end
 
   def place_move_of(player)
-    board.set(player.next_move(board))
+    move = player.next_move(board)
+    begin
+    board.set_move(move.mark, move.location)
+    rescue
+    end
   end
 
   def switch_players
     players.reverse!
+  end
+
+  def winner_of_game
+    if board.winner?(players.first.mark)
+      players.first.mark
+    elsif board.winner?(players.last.mark)
+      players.last.mark
+    else
+      ''
+    end
   end
 
   class InsufficientAmountOfPlayers < Exception
