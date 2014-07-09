@@ -10,56 +10,37 @@ describe Board do
 
   it 'is not empty when it got a move placed' do
     board = Board.new
-    board.set(some_move)
+    board.set_move(1, 'o')
 
     expect(board.empty?).to be false
   end
 
-  it 'can return its rows' do
-    board = board_with('111222333')
-    
-    expect(board.rows).to eq [['1', '1', '1'], ['2', '2', '2'], ['3', '3', '3']]
-  end
-
-  it 'can return its columns' do
-    board = board_with('123123123')
-    expect(board.columns).to eq [['1', '1', '1'], ['2', '2', '2'], ['3', '3', '3']]
-  end
-
-  it 'can return its diagonals' do
-    board = board_with('123456789')
-    expect(board.diagonals).to eq [['1', '5', '9'], ['3', '5', '7']]
-  end
-
-  it 'knows free spots' do
-    expect(board_with('x oxxo  x').free_spots).to eq [1, 6, 7]
-  end
-
-  it 'moves can be undone' do
-    board = Board.new
-    board.set(Move.new('x', 3))
-    board.undo(3)
-
-    expect(board.empty?).to be true
-  end
-
   it 'knows how many moves were made' do
     board = Board.new
-    board.set(some_move)
+    board.set_move(2, 'x')
 
     expect(board.moves_made).to eq(1)
   end
 
+  it 'moves can be undone' do
+    board = Board.new
+    board.set_move(3, 'x')
+    board.unset_move(3)
+
+    expect(board.empty?).to be true
+  end
+
+  it 'locations can not be set more than once' do
+    board = board_with('x        ')
+    expect { board.set_move(0, 'o') }.to raise_error(Board::IllegalMove)
+  end
+
+  it 'knows free locations' do
+    expect(board_with('x oxxo  x').free_locations).to eq [1, 6, 7]
+  end
+
   it 'knows when it is full' do
-    expect(full_board.is_full?).to eq true
-  end
-
-  def some_move
-    Move.new('x', 0)
-  end
-
-  def full_board
-    board_with('ooxxxooxo')
+    expect(board_with('ooxxxooxo').is_full?).to eq true
   end
 
   context 'Move constellations' do
@@ -84,34 +65,25 @@ describe Board do
 
     it 'knows when a board has a winning diagonal' do
       expect(board_with('x   x   x').has_winner?).to eq true
+      expect(board_with('  o o o  ').has_winner?).to eq true
     end
 
     it 'knows the winner' do
-      expect(board_with('xxx      ').winner).to eq 'x'
-      expect(board_with('ooo      ').winner).to eq 'o'
-      expect(board_with('   xxx   ').winner).to eq 'x'
-      expect(board_with('      ooo').winner).to eq 'o'
-      expect(board_with('x  x  x  ').winner).to eq 'x'
-      expect(board_with(' o  o  o ').winner).to eq 'o'
-      expect(board_with('  x  x  x').winner).to eq 'x'
-      expect(board_with('o   o   o').winner).to eq 'o'
-      expect(board_with('  x x x  ').winner).to eq 'x'
-    end
-
-    it 'returns nil when no one is the winner' do
-      expect(board_with('xox      ').winner).to be_nil
-    end
-
-    it 'knows when there is no winner' do
-      expect(board_with('xox      ').has_winner?).to eq false
-      expect(board_with('oxoxoxxox').has_winner?).to eq false
+      expect(board_with('xxx      ').winner?('x')).to be true
+      expect(board_with('ooo      ').winner?('x')).to be false
+      expect(board_with('   xxx   ').winner?('x')).to be true
+      expect(board_with('      ooo').winner?('x')).to be false
+      expect(board_with('x  x  x  ').winner?('x')).to be true
+      expect(board_with(' o  o  o ').winner?('o')).to be true
+      expect(board_with('  x  x  x').winner?('x')).to be true
+      expect(board_with('o   o   o').winner?('o')).to be true
+      expect(board_with('  x x x  ').winner?('o')).to be false
     end
 
     it 'knows when it is completed' do
       board = board_with('ooxxxooxo')
 
-      expect(board.is_done?).to eq true
-      expect(board.has_winner?).to eq false
+      expect(board.is_completed?).to eq true
     end
   end
 end
