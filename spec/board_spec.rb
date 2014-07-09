@@ -61,4 +61,57 @@ describe Board do
   def full_board
     board_with('ooxxxooxo')
   end
+
+  context 'Move constellations' do
+    let(:board) { Board.new }
+
+    it 'knows when there is a winning row' do
+      expect(board_with('xxx      ').has_winner?).to eq true
+      expect(board_with('   xxx   ').has_winner?).to eq true
+      expect(board_with('      xxx').has_winner?).to eq true
+    end
+
+    it 'knows a winning state for every player' do
+      expect(board_with('xxx      ').has_winner?).to eq true
+      expect(board_with('      ooo').has_winner?).to eq true
+    end
+
+    it 'knows when a board has a winning column' do
+      expect(board_with('x  x  x  ').has_winner?).to eq true
+      expect(board_with(' x  x  x ').has_winner?).to eq true
+      expect(board_with('  x  x  x').has_winner?).to eq true
+    end
+
+    it 'knows when a board has a winning diagonal' do
+      expect(board_with('x   x   x').has_winner?).to eq true
+    end
+
+    it 'knows the winner' do
+      expect(board_with('xxx      ').winner).to eq 'x'
+      expect(board_with('ooo      ').winner).to eq 'o'
+      expect(board_with('   xxx   ').winner).to eq 'x'
+      expect(board_with('      ooo').winner).to eq 'o'
+      expect(board_with('x  x  x  ').winner).to eq 'x'
+      expect(board_with(' o  o  o ').winner).to eq 'o'
+      expect(board_with('  x  x  x').winner).to eq 'x'
+      expect(board_with('o   o   o').winner).to eq 'o'
+      expect(board_with('  x x x  ').winner).to eq 'x'
+    end
+
+    it 'returns nil when no one is the winner' do
+      expect(board_with('xox      ').winner).to be_nil
+    end
+
+    it 'knows when there is no winner' do
+      expect(board_with('xox      ').has_winner?).to eq false
+      expect(board_with('oxoxoxxox').has_winner?).to eq false
+    end
+
+    it 'knows when it is completed' do
+      board = board_with('ooxxxooxo')
+
+      expect(board.is_done?).to eq true
+      expect(board.has_winner?).to eq false
+    end
+  end
 end

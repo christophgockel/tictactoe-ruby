@@ -77,4 +77,60 @@ class Board
   def moves_made
     rows.flatten.size - free_spots.size
   end
+
+  def has_winner?
+    has_winner_somewhere? {}
+  end
+
+  def winner
+    the_winner = nil
+    has_winner_somewhere? { |winner| the_winner = winner }
+    the_winner
+  end
+
+  def is_done?
+    has_winner? || is_full?
+  end
+
+  def has_winner_somewhere?(&block)
+    has_winner_in_row?(&block) ||
+    has_winner_in_column?(&block) ||
+    has_winner_in_diagonal?(&block)
+  end
+
+  def has_winner_in_row?(&block)
+    rows.any? do |row|
+      line_has_winner?(row, &block)
+    end
+  end
+
+  def has_winner_in_column?(&block)
+    columns.any? do |column|
+      line_has_winner?(column, &block)
+    end
+  end
+
+  def has_winner_in_diagonal?(&block)
+    diagonals.any? do |diagonal|
+      line_has_winner?(diagonal, &block)
+    end
+  end
+
+  def line_has_winner?(line, &block)
+    if all_x?(line)
+      block.call('x') if block_given?
+      true
+    elsif all_o?(line)
+      block.call('o') if block_given?
+      true
+    end
+  end
+
+  def all_x?(line)
+    line.all? { |cell| cell == 'x'  }
+  end
+
+  def all_o?(line)
+    line.all? { |cell| cell == 'o' }
+  end
 end
