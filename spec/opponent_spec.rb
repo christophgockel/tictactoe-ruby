@@ -77,10 +77,10 @@ describe Opponent do
     expect(next_move_for(o).in('  o o    ')).to eq 6
   end
 
-  it 'does the right thing' do
+  it 'blocks moves in real game constellations' do
     expect(next_move_for(o).in('ox xxo   ')). to eq 7
+    expect(next_move_for(o).in('  ooxx  x')). to eq 0
   end
-
 
   class BoardHelper
     def initialize(player, opponent)

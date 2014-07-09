@@ -16,7 +16,6 @@ class Opponent
     best_move(board)
   end
 
-
   def best_move(board)
     move = negamax(board, -1, 1, player)
     return move.location
@@ -27,7 +26,7 @@ class Opponent
     best_move = -1
     best_score = -1
 
-    if board.free_spots.size == 0 || rules.has_winner?(board)
+    if rules.is_done?(board)
       return RatedMove.new(score(board, symbol), best_move)
     end
 
@@ -57,28 +56,20 @@ class Opponent
 
   def opponent(symbol)
     if symbol == Player::X
-      return Player::O
+      Player::O
+    else
+      Player::X
     end
-
-    return Player::X
   end
 
   def score(board, symbol)
-    state = rules.winner(board)
+    winner = rules.winner(board)
     move_count = board.moves_made
 
-    if state == Player::X
-      if symbol == Player::X
-        return 1.0 / move_count
-      else
-        return -1.0 / move_count
-      end
-    elsif state == Player::O
-      if symbol == Player::X
-        return -1.0 / move_count
-      else
-        return 1.0 / move_count
-      end
+    if winner == symbol
+      return 1.0 / move_count
+    elsif winner == opponent(symbol)
+      return -1.0 / move_count
     else
       return 0.0
     end

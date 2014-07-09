@@ -12,6 +12,10 @@ class Board
     cells.all? { |e| e.nil? }
   end
 
+  def is_full?
+    free_spots.size == 0
+  end
+
   def set(move)
     cells[move.location] = move.symbol
   end

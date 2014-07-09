@@ -48,4 +48,11 @@ describe Rules do
     expect(rules.has_winner?(board_with('xox      '))).to eq false
     expect(rules.has_winner?(board_with('oxoxoxxox'))).to eq false
   end
+
+  it 'knows when it is completed' do
+    board = board_with('ooxxxooxo')
+
+    expect(rules.is_done?(board)).to eq true
+    expect(rules.has_winner?(board)).to eq false
+  end
 end

@@ -1,7 +1,6 @@
-require 'rspec'
+require 'spec_helper'
 
 require 'board'
-
 
 describe Board do
   it 'is empty when just created' do
@@ -51,7 +50,15 @@ describe Board do
     expect(board.moves_made).to eq(1)
   end
 
+  it 'knows when it is full' do
+    expect(full_board.is_full?).to eq true
+  end
+
   def some_move
     Move.new('x', 0)
+  end
+
+  def full_board
+    board_with('ooxxxooxo')
   end
 end

@@ -5,10 +5,14 @@ class Rules
     has_winner_somewhere?(board) {}
   end
 
-  def winner(board, &block)
+  def winner(board)
     the_winner = nil
     has_winner_somewhere?(board) { |winner| the_winner = winner }
     the_winner
+  end
+
+  def is_done?(board)
+    has_winner?(board) || board.is_full?
   end
 
   def has_winner_somewhere?(board, &block)
