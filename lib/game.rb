@@ -4,15 +4,7 @@ require 'board'
 class Game
   attr_reader :players, :board, :display
 
-  def self.with_players(players)
-    Game.new(players)
-  end
-
-  def self.prepare_new(players, display)
-    Game.new(players, Board.new, display)
-  end
-
-  def initialize(players, board = nil, display = nil)
+  def initialize(players, board, display)
     @players = players
     @board   = board
     @display = display
@@ -42,7 +34,7 @@ class Game
   def place_move_of(player)
     move = player.next_move(board)
     begin
-    board.set_move(move.mark, move.location)
+      board.set_move(move.mark, move.location)
     rescue
     end
   end

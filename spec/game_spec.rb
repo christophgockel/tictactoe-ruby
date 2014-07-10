@@ -4,70 +4,81 @@ require 'game'
 require 'player'
 require 'board'
 
-
 describe Game do
-  let(:player_x) { Player.X }
-  let(:player_o) { Player.O }
-  let(:board)    { Board.new }
-  let(:display)  { double }
+  let(:player_a) { object_double(Player.new('a')).as_null_object }
+  let(:player_b) { object_double(Player.new('b')).as_null_object }
+  let(:board)    { instance_double(Board).as_null_object }
+  let(:display)  { double.as_null_object }
 
   before(:each) do
-    allow(player_x).to receive(:next_move).and_return(Player::Move.new(Player::X, 1))
-    allow(player_o).to receive(:next_move).and_return(Player::Move.new(Player::O, 2))
-    allow(board).to receive(:is_completed?).and_return(false, false, true)
-    allow(display).to receive(:show_contents)
+    allow(player_a).to receive(:next_move).and_return(Player::Move.new(player_a.mark, 1))
+    allow(player_b).to receive(:next_move).and_return(Player::Move.new(player_b.mark, 2))
 
-    @game = Game.new([player_x, player_o], board, display)
+    @game = Game.new([player_a, player_b], board, display)
   end
 
-  it 'can not be started without enough players' do
-    game = Game.with_players([])
-    expect { game.start }.to raise_error(Game::InsufficientAmountOfPlayers)
+  context 'basic rules' do
+    it 'runs until done' do
+      prepare_two_round_game
+      @game.start
+      expect(board).to have_received(:is_completed?).exactly(3).times
+    end
+
+    it 'returns the winner when done' do
+      prepare_player_b_as_winner
+      expect(@game.start).to eq(player_b.mark)
+    end
+
+    def prepare_two_round_game
+      allow(board).to receive(:is_completed?).and_return(false, false, true)
+    end
+
+    def prepare_player_b_as_winner
+      allow(board).to receive(:winner?).and_return(true)
+    end
   end
 
-  it 'needs two players to be started' do
-    allow(board).to receive(:has_winner?).and_return(true, false, false, true)
-    game = Game.new([double.as_null_object, double.as_null_object], board, display)
-    expect { game.start }.not_to raise_error
+  context 'when not enough players' do
+    let(:game) { Game.new([], board, display) }
+
+    it 'can not be started' do
+      expect { game.start }.to raise_error(Game::InsufficientAmountOfPlayers)
+    end
   end
 
-  it 'passes the board when asking a player for a move' do
-    @game.start
-    expect(player_x).to have_received(:next_move).with(board).at_least(:once)
+  context 'player interaction' do
+    it 'passes the board when asking a player for a move' do
+      @game.start
+      expect(player_a).to have_received(:next_move).with(board).at_least(:once)
+    end
+
+    it 'places player moves on board' do
+      expect(board).to receive(:set_move).with(player_a.mark, 1)
+      @game.place_move_of(player_a)
+    end
+
+    it 'is asking each player for moves' do
+      prepare_two_round_game
+      @game.start
+
+      expect(player_a).to have_received(:next_move).exactly(1).times
+      expect(player_b).to have_received(:next_move).exactly(1).times
+    end
+
+    def prepare_two_round_game
+      allow(board).to receive(:is_completed?).and_return(false, true)
+    end
   end
 
-  it 'places player moves on board' do
-    board = double
-    game = Game.new([player_x, player_o], board)
+  context 'display' do
+    it 'will be updated for each game round plus at the end of a game' do
+      prepare_two_round_game
+      @game.start
+      expect(display).to have_received(:show_contents).exactly(4).times
+    end
 
-    expect(board).to receive(:set_move).with(Player::X, 1)
-    game.place_move_of(player_x)
-  end
-
-  it 'runs until done' do
-    allow(board).to receive(:is_completed?).and_return(false, false, true)
-    expect(board).to receive(:is_completed?).exactly(3).times
-
-    @game.start
-  end
-
-  it 'is asking players consecutively for moves' do
-    allow(board).to receive(:is_completed?).and_return(false, true)
-
-    expect(player_x).to receive(:next_move).exactly(1).times
-    expect(player_o).to receive(:next_move).exactly(1).times
-
-    @game.start
-  end
-
-  it 'pushes the board to a display for each round plus at the end of a game' do
-    expect(display).to receive(:show_contents).with(board).exactly(4).times
-
-    @game.start
-  end
-
-  it 'returns the winner when done' do
-    allow(board).to receive(:winner?).and_return(Player::O)
-    expect(@game.start).to eq(Player::O)
+    def prepare_two_round_game
+      allow(board).to receive(:is_completed?).and_return(false, false, true)
+    end
   end
 end
