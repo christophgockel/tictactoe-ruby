@@ -42,7 +42,7 @@ describe Game do
     let(:game) { Game.new([], board, display) }
 
     it 'can not be started' do
-      expect { game.start }.to raise_error(Game::InsufficientAmountOfPlayers)
+      expect { game.start }.to raise_error(Game::InsufficientNumberOfPlayers)
     end
   end
 

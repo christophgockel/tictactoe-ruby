@@ -19,7 +19,7 @@ class Game
         display_board
         place_move_of(players.first)
         switch_players
-      rescue Player::InvalidMove
+      rescue Board::InvalidMove
         display.display_invalid_move_message
       end
     end while game_is_ongoing
@@ -55,14 +55,14 @@ class Game
     end
   end
 
-  class InsufficientAmountOfPlayers < RuntimeError
+  class InsufficientNumberOfPlayers < RuntimeError
   end
 
   private
 
   def ensure_enough_players
     if players.length != 2
-      raise InsufficientAmountOfPlayers
+      raise InsufficientNumberOfPlayers
     end
   end
 end

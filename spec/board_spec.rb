@@ -30,16 +30,21 @@ describe Board do
 
   it 'locations can not be set more than once' do
     board = board_with('x        ')
-    expect { board.set_move(0, 'o') }.to raise_error(Board::IllegalMove)
+    expect { board.set_move(1, 'o') }.to raise_error(Board::InvalidMove)
   end
 
   it 'only accepts numbers as locations' do
     board = board_with('         ')
-    expect { board.set_move('1', 'o') }.to raise_error(Board::IllegalMove)
+    expect { board.set_move('1', 'o') }.to raise_error(Board::InvalidMove)
+  end
+
+  it 'move locations need to be within board\'s boundaries' do
+    board = board_with('         ')
+    expect { board.set_move(0, 'o') }.to raise_error(Board::InvalidMove)
   end
 
   it 'knows free locations' do
-    expect(board_with('x oxxo  x').free_locations).to eq [1, 6, 7]
+    expect(board_with('x oxxo  x').free_locations).to eq [2, 7, 8]
   end
 
   it 'provides its rows' do
