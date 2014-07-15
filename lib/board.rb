@@ -15,7 +15,7 @@ class Board
   end
 
   def set_move(location, mark)
-    raise IllegalMove if already_occupied(location)
+    raise IllegalMove if invalid_location(location) || already_occupied(location)
     cells[location] = mark
   end
 
@@ -45,11 +45,11 @@ class Board
 
   class IllegalMove < ArgumentError; end
 
-  private
-
   def rows
     cells.each_slice(SIZE).to_a
   end
+
+  private
 
   def columns
     rows.transpose
@@ -69,5 +69,9 @@ class Board
 
   def already_occupied(location)
     cells[location].nil? == false
+  end
+
+  def invalid_location(location)
+    location.is_a?(Integer) == false
   end
 end

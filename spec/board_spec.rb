@@ -33,8 +33,19 @@ describe Board do
     expect { board.set_move(0, 'o') }.to raise_error(Board::IllegalMove)
   end
 
+  it 'only accepts numbers as locations' do
+    board = board_with('         ')
+    expect { board.set_move('1', 'o') }.to raise_error(Board::IllegalMove)
+  end
+
   it 'knows free locations' do
     expect(board_with('x oxxo  x').free_locations).to eq [1, 6, 7]
+  end
+
+  it 'provides its rows' do
+    expect(board_with('123456789').rows).to eq [['1', '2', '3'],
+                                                ['4', '5', '6'],
+                                                ['7', '8', '9']]
   end
 
   it 'knows when it is full' do
