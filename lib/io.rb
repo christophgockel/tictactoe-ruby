@@ -1,8 +1,5 @@
 require 'opponent'
 
-class InvalidInput < RuntimeError
-end
-
 class CommandLineIO
   attr_reader :input, :output
 
@@ -14,9 +11,7 @@ class CommandLineIO
   def next_location(player, board)
     output.puts "Next move for #{player}:"
 
-    location = input.gets.to_i
-    raise InvalidInput if location <= 0 || location > 9
-    location - 1
+    input.gets.to_i
   end
 
   def display_board(board)

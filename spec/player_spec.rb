@@ -29,14 +29,6 @@ describe Player do
     expect(move.location).to eq 6
   end
 
-  it 'raises InvalidMove on invalid inputs' do
-    input = double('input')
-    allow(input).to receive(:next_location).and_raise(InvalidInput)
-    player = Player.new("X", input)
-
-    expect { player.next_move(double) }.to raise_error(Player::InvalidMove)
-  end
-
   it 'has factory methods for creating a specific player' do
     expect(Player.X.mark).to eq Player::X
     expect(Player.O.mark).to eq Player::O

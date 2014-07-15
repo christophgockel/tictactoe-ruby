@@ -16,34 +16,6 @@ describe CommandLineIO do
   let(:output) { StringIO.new }
   subject { CommandLineIO.new(input, output) }
 
-  context 'input' do
-    context 'valid' do
-      it 'converts given value to number - 1' do
-        input.string = '3'
-        move = subject.next_location(double, double)
-
-        expect(move).to eq 2
-      end
-    end
-
-    context 'invalid' do
-      it 'raises exception' do
-        input.string = 'no number'
-        expect { subject.next_location(double, double) }.to raise_error(InvalidInput)
-      end
-
-      it 'given location must be >0' do
-        input.string = '0'
-        expect { subject.next_location(double, double) }.to raise_error(InvalidInput)
-      end
-
-      it 'given location must be <=9' do
-        input.string = '10'
-        expect { subject.next_location(double, double) }.to raise_error(InvalidInput)
-      end
-    end
-  end
-
   context 'output' do
     it 'displays board contents' do
       subject.display_board(board_with('abcdefghi'))

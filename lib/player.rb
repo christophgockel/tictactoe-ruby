@@ -21,11 +21,7 @@ class Player
   end
 
   def next_move(board)
-    begin
-      Move.new(mark, input.next_location(mark, board))
-    rescue InvalidInput
-      raise InvalidMove
-    end
+    Move.new(mark, input.next_location(mark, board))
   end
 
   Move = Struct.new(:mark, :location)
