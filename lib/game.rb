@@ -1,5 +1,6 @@
 require 'player'
 require 'board'
+require 'player'
 
 class Game
   attr_reader :players, :board, :display
@@ -12,11 +13,15 @@ class Game
 
   def start
     begin
-      ensure_enough_players
+      begin
+        ensure_enough_players
 
-      display_board
-      place_move_of(players.first)
-      switch_players
+        display_board
+        place_move_of(players.first)
+        switch_players
+      rescue Player::InvalidMove
+        display.display_invalid_move_message
+      end
     end while game_is_ongoing
     display_board
 
@@ -28,15 +33,12 @@ class Game
   end
 
   def display_board
-    display.show_contents(board)
+    display.display_board(board)
   end
 
   def place_move_of(player)
     move = player.next_move(board)
-    begin
-      board.set_move(move.mark, move.location)
-    rescue
-    end
+    board.set_move(move.location, move.mark)
   end
 
   def switch_players

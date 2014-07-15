@@ -2,31 +2,17 @@ require 'game'
 require 'player'
 require 'opponent'
 require 'board'
+require 'io'
 
 
-class StandardInput
-  def next_move(player, board)
-    puts "\nWhat's your next move?"
-    gets.chomp.to_i
-  end
-end
+cli_io = CommandLineIO.new
+automatic_input = AutomaticInput.new
 
-class StandardOutput
-  def show_contents(board)
-    system 'clear'
-    content = board.rows.map.with_index do |row, row_index|
-      row.map.with_index { |cell, column_index| cell || (row_index*row.length) + column_index }.join(' | ')
-    end.join("\n---------\n")
-
-    puts content
-  end
-end
-
-x = Player.X(StandardInput.new)
-o = Player.O(Opponent.new)
+x = Player.X(cli_io)
+o = Player.O(automatic_input)
 
 begin
-  game = Game.prepare_new([x, o], StandardOutput.new)
+  game = Game.new([x, o], Board.new, cli_io)
 
   puts 'winner is: ' + game.start
 rescue Interrupt

@@ -1,4 +1,4 @@
-require 'rspec'
+require 'spec_helper'
 
 require 'game'
 require 'player'
@@ -53,7 +53,7 @@ describe Game do
     end
 
     it 'places player moves on board' do
-      expect(board).to receive(:set_move).with(player_a.mark, 1)
+      expect(board).to receive(:set_move).with(1, player_a.mark)
       @game.place_move_of(player_a)
     end
 
@@ -65,6 +65,10 @@ describe Game do
       expect(player_b).to have_received(:next_move).exactly(1).times
     end
 
+    xit 'displays a message on invalid moves' do
+
+    end
+
     def prepare_two_round_game
       allow(board).to receive(:is_completed?).and_return(false, true)
     end
@@ -74,11 +78,26 @@ describe Game do
     it 'will be updated for each game round plus at the end of a game' do
       prepare_two_round_game
       @game.start
-      expect(display).to have_received(:show_contents).exactly(4).times
+      expect(display).to have_received(:display_board).exactly(4).times.with(board)
     end
 
     def prepare_two_round_game
       allow(board).to receive(:is_completed?).and_return(false, false, true)
+    end
+  end
+
+  context 'end results' do
+    it 'returns the symbol of the winner' do
+      game = dummy_game_with('aaa      ')
+
+      expect(game.start).to eq 'a'
+    end
+
+    def dummy_game_with(board_content)
+      board = board_with('aaa      ')
+      allow(player_a).to receive(:next_move).and_return(Player::Move.new(player_a.mark, 2))
+
+      Game.new([player_a, player_b], board, display)
     end
   end
 end

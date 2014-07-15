@@ -1,4 +1,5 @@
 require 'board'
+require 'io'
 
 class Player
   X = "x"
@@ -20,8 +21,15 @@ class Player
   end
 
   def next_move(board)
-    Move.new(mark, input.next_move(self, board))
+    begin
+      Move.new(mark, input.next_location(mark, board))
+    rescue InvalidInput
+      raise InvalidMove
+    end
   end
 
   Move = Struct.new(:mark, :location)
+
+  class InvalidMove < RuntimeError
+  end
 end

@@ -6,7 +6,7 @@ class Opponent
   RatedMove = Struct.new(:score, :location)
 
   def next_move(player, board)
-    @player = player.mark
+    @player = player
 
     best_move(board)
   end

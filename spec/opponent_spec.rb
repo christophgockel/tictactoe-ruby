@@ -91,7 +91,7 @@ describe Opponent do
     end
 
     def in(board_state)
-      @opponent.next_move(@player, board_with(board_state))
+      @opponent.next_move(@player.mark, board_with(board_state))
     end
   end
 

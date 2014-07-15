@@ -1,3 +1,8 @@
+require 'simplecov'
+SimpleCov.start
+
+require 'board'
+
 def board_with(contents)
   board = Board.new
 
