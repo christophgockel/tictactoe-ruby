@@ -1,18 +1,20 @@
-require 'player'
-
-class Opponent
-  attr_reader :player
+class ComputerPlayer
+  attr_reader :mark
 
   RatedMove = Struct.new(:score, :location)
 
-  def next_move(player, board)
-    @player = player
+  def initialize(mark)
+    @mark = mark
+  end
 
+  def next_move(board)
     best_move(board)
   end
 
+  private
+
   def best_move(board)
-    move = negamax(board, -1, 1, player)
+    move = negamax(board, -1, 1, mark)
     return move.location
   end
 
@@ -50,10 +52,10 @@ class Opponent
   end
 
   def opponent(mark)
-    if mark == Player::X
-      Player::O
+    if mark == 'x'
+      'o'
     else
-      Player::X
+      'x'
     end
   end
 

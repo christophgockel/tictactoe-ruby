@@ -42,12 +42,3 @@ describe CommandLineIO do
     end
   end
 end
-
-describe AutomaticInput do
-  it_should_behave_like 'an IO object'
-
-  it 'places middle cell when player chose corder' do
-    ai = AutomaticInput.new
-    expect(ai.next_location('o', board_with('x        '))).to eq 5
-  end
-end

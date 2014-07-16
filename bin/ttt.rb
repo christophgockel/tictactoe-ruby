@@ -1,15 +1,14 @@
 require 'game'
-require 'player'
-require 'opponent'
 require 'board'
 require 'io'
+require 'human_player'
+require 'computer_player'
 
 
 cli_io = CommandLineIO.new
-automatic_input = AutomaticInput.new
 
-x = Player.X(cli_io)
-o = Player.O(automatic_input)
+x = HumanPlayer.new('x')
+o = ComputerPlayer.new('o')
 
 begin
   game = Game.new([x, o], Board.new, cli_io)

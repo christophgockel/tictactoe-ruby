@@ -1,5 +1,3 @@
-require 'opponent'
-
 class CommandLineIO
   attr_reader :input, :output
 
@@ -27,14 +25,5 @@ class CommandLineIO
 
   def display_invalid_move_message
     output.puts 'Invalid move.'
-  end
-end
-
-class AutomaticInput
-  def next_location(player, board)
-    Opponent.new.next_move(player, board)
-  end
-
-  def display_board(board)
   end
 end

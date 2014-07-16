@@ -1,5 +1,3 @@
-require 'player'
-
 class HumanPlayer
   attr_reader :mark, :input
 

@@ -1,11 +1,15 @@
 require 'spec_helper'
 
-require 'opponent'
+require 'computer_player'
 
-describe Opponent do
-  let(:opponent) { Opponent.new }
-  let(:x) { Player.X }
-  let(:o) { Player.O }
+describe ComputerPlayer do
+  subject { described_class.new('o') }
+
+  it_should_behave_like 'a player'
+
+  let(:opponent) { ComputerPlayer.new('o') }
+  let(:x) { 'x' }
+  let(:o) { 'o' }
 
   it 'blocks possible wins for every row' do
     expect(next_move_for(x).in(' oo      ')).to eq 1
@@ -91,7 +95,7 @@ describe Opponent do
     end
 
     def in(board_state)
-      @opponent.next_move(@player.mark, board_with(board_state))
+      @opponent.next_move(board_with(board_state))
     end
   end
 

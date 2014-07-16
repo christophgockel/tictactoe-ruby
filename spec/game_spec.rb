@@ -1,18 +1,17 @@
 require 'spec_helper'
 
 require 'game'
-require 'player'
 require 'board'
 
 describe Game do
-  let(:player_a) { object_double(Player.new('a')).as_null_object }
-  let(:player_b) { object_double(Player.new('b')).as_null_object }
+  let(:player_a) { object_double(FakePlayer.new('a')).as_null_object }
+  let(:player_b) { object_double(FakePlayer.new('b')).as_null_object }
   let(:board)    { instance_double(Board).as_null_object }
   let(:display)  { double.as_null_object }
 
   before(:each) do
-    allow(player_a).to receive(:next_move).and_return(Player::Move.new(player_a.mark, 1))
-    allow(player_b).to receive(:next_move).and_return(Player::Move.new(player_b.mark, 2))
+    allow(player_a).to receive(:next_move).and_return(1)
+    allow(player_b).to receive(:next_move).and_return(2)
 
     @game = Game.new([player_a, player_b], board, display)
   end
@@ -122,6 +121,11 @@ class FakePlayer
   end
 
   def next_move(board)
-    Player::Move.new(mark, 5)
+    5
   end
+end
+
+describe FakePlayer do
+  subject { described_class.new('x') }
+  it_should_behave_like 'a player'
 end

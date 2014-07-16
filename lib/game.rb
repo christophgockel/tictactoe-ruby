@@ -1,6 +1,4 @@
-require 'player'
 require 'board'
-require 'player'
 
 class Game
   attr_reader :players, :board, :display
@@ -38,7 +36,7 @@ class Game
 
   def place_move_of(player)
     move = player.next_move(board)
-    board.set_move(move.location, move.mark)
+    board.set_move(move, player.mark)
   end
 
   def switch_players
