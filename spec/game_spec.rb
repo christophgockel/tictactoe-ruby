@@ -65,10 +65,6 @@ describe Game do
       expect(player_b).to have_received(:next_move).exactly(1).times
     end
 
-    xit 'displays a message on invalid moves' do
-
-    end
-
     def prepare_two_round_game
       allow(board).to receive(:is_completed?).and_return(false, true)
     end
@@ -81,23 +77,51 @@ describe Game do
       expect(display).to have_received(:display_board).exactly(4).times.with(board)
     end
 
+    it 'shows a message on invalid moves' do
+      board = board_with('   aaa   ')
+      player_a = FakePlayer.new('a')
+      player_b = FakePlayer.new('b')
+
+      game = Game.new([player_a, player_b], board, display)
+
+      game.start
+
+      expect(display).to have_received(:display_invalid_move_message)
+    end
+
     def prepare_two_round_game
       allow(board).to receive(:is_completed?).and_return(false, false, true)
     end
   end
 
   context 'end results' do
-    xit 'returns the symbol of the winner' do
-      game = dummy_game_with('aaa      ')
+    it 'returns the symbol of the winner' do
+      expect(dummy_game_with('aaa      ').start).to eq 'a'
+      expect(dummy_game_with('      bbb').start).to eq 'b'
+    end
 
-      expect(game.start).to eq 'a'
+    it 'returns empty string when there\'s no winner' do
+      expect(dummy_game_with('xoxo xxoo').start).to eq ''
     end
 
     def dummy_game_with(board_content)
-      board = board_with('aaa      ')
-      allow(player_a).to receive(:next_move).and_return(Player::Move.new(player_a.mark, 2))
+      board = board_with(board_content)
+      player_a = FakePlayer.new('a')
+      player_b = FakePlayer.new('b')
 
       Game.new([player_a, player_b], board, display)
     end
+  end
+end
+
+class FakePlayer
+  attr_reader :mark
+
+  def initialize(mark)
+    @mark = mark
+  end
+
+  def next_move(board)
+    Player::Move.new(mark, 5)
   end
 end
