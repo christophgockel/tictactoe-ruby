@@ -5,9 +5,36 @@ class Game
 
   def initialize(players, board, display)
     @players = players
-    @board   = board
+    @board   = board || Board.new
     @display = display
   end
+
+  def self.init(player_a, player_b, board = nil)
+    Game.new([player_a, player_b], board, nil)
+  end
+
+  class Over < RuntimeError
+  end
+
+  def play_next_round
+    raise Over if is_ongoing? == false
+
+    place_move_of(players.first)
+    switch_players
+  end
+
+  def is_ongoing?
+    board.is_completed? == false
+  end
+
+  def winner
+    return players.first.mark if board.winner?(players.first.mark)
+    return players.last.mark if board.winner?(players.last.mark)
+    ''
+  end
+
+
+
 
   def start
     begin

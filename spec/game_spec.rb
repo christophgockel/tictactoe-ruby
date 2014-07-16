@@ -16,6 +16,49 @@ describe Game do
     @game = Game.new([player_a, player_b], board, display)
   end
 
+  it 'in each round a player will be asked for its next move' do
+    player_a = instance_double(FakePlayer, :mark => 'a', :next_move => 5)
+    game = Game.init(player_a, player_b, board_with('baba bbaa'))
+    game.play_next_round
+
+    expect(player_a).to have_received(:next_move)
+  end
+
+  it 'switches players for each round' do
+    player_a = instance_double(FakePlayer, :mark => 'a', :next_move => 1)
+    player_b = instance_double(FakePlayer, :mark => 'b', :next_move => 9)
+
+    game = Game.init(player_a, player_b, board_with('         '))
+    game.play_next_round
+    game.play_next_round
+
+    expect(player_a).to have_received(:next_move)
+    expect(player_b).to have_received(:next_move)
+  end
+
+  it 'can only be played until its over' do
+    player_a = FakePlayer.new('a')
+    player_b = FakePlayer.new('b')
+
+    game = Game.init(player_a, player_b, board_with('aabababba'))
+
+    expect { game.play_next_round }.to raise_error(Game::Over)
+  end
+
+
+  it 'can return the winner of a game' do
+    player_a = FakePlayer.new('a')
+    player_b = FakePlayer.new('b')
+
+    game = Game.init(player_a, player_b, board_with('aaa      '))
+
+    expect(game.is_ongoing?).to eq false
+    expect(game.winner).to eq 'a'
+  end
+
+
+
+
   context 'basic rules' do
     it 'runs until done' do
       prepare_two_round_game
@@ -116,12 +159,13 @@ end
 class FakePlayer
   attr_reader :mark
 
-  def initialize(mark)
+  def initialize(mark, next_move = 5)
     @mark = mark
+    @next_move = next_move
   end
 
   def next_move(board)
-    5
+    @next_move
   end
 end
 
