@@ -5,11 +5,12 @@ require 'game'
 require 'fake_player'
 
 describe CommandlineUI do
+  let(:output) { StringIO.new }
+
   it 'displays the board when started' do
-    output = StringIO.new
     a = FakePlayer.new('a', 1)
     b = FakePlayer.new('b', 2)
-    game = Game.init(a, b, board_with(' bcdefghi'))
+    game = Game.new(a, b, board_with(' bcdefghi'))
     ui = CommandlineUI.new(game, output)
 
     ui.run
@@ -20,10 +21,9 @@ describe CommandlineUI do
   end
 
   it 'prints a message when asking for next player\'s move' do
-    output = StringIO.new
     a = FakePlayer.new('a', 1)
     b = FakePlayer.new('b', 2)
-    game = Game.init(a, b, board_with(' bcdefghi'))
+    game = Game.new(a, b, board_with(' bcdefghi'))
     ui = CommandlineUI.new(game, output)
 
     ui.run
@@ -32,10 +32,9 @@ describe CommandlineUI do
   end
 
   it 'prints the winner at the end' do
-    output = StringIO.new
     a = FakePlayer.new('a', 2)
     b = FakePlayer.new('b', 2)
-    game = Game.init(a, b, board_with('a aabbbba'))
+    game = Game.new(a, b, board_with('a aabbbba'))
     ui = CommandlineUI.new(game, output)
 
     ui.run
@@ -44,14 +43,35 @@ describe CommandlineUI do
   end
 
   it 'plays the game until there is a winner' do
-    output = StringIO.new
     a = FakePlayer.new('a', 9)
     b = FakePlayer.new('b', 3)
-    game = Game.init(a, b, board_with('bb aa    '))
+    game = Game.new(a, b, board_with('bb aa    '))
     ui = CommandlineUI.new(game, output)
 
     ui.run
 
     expect(output.string.include?('Winner is: b')).to eq true
+  end
+
+  it 'notifies about a draw' do
+    a = FakePlayer.new('a', 9)
+    b = FakePlayer.new('b', 3)
+    game = Game.new(a, b, board_with('bbaaabbba'))
+    ui = CommandlineUI.new(game, output)
+
+    ui.run
+
+    expect(output.string).to include 'Game ended in a draw.'
+  end
+
+  it 'prints an error message on invalid moves' do
+    a = FakePlayer.new('a', 1)
+    b = FakePlayer.new('b', 2, 3)
+    game = Game.new(a, b, board_with(' b bababb'))
+    ui = CommandlineUI.new(game, output)
+
+    ui.run
+
+    expect(output.string).to include 'Invalid move!'
   end
 end

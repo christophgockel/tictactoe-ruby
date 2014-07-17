@@ -8,12 +8,12 @@ class CommandlineUI
 
   def run
     while game.is_ongoing?
-    display_board(game.board)
-    stdout.puts 'Next move:'
-    game.play_next_round
-    stdout.puts '*******************'
+      stdout.puts "\e[H\e[2J"
+      display_board(game.board)
+      make_next_move
     end
-    stdout.puts "Winner is: #{game.winner}"
+
+    display_game_result
   end
 
   private
@@ -27,5 +27,33 @@ class CommandlineUI
     end.join("\n---------\n")
 
     stdout.puts content
+  end
+
+  def make_next_move
+    loop do
+      begin
+        display_next_move_prompt
+        game.play_next_round
+        break
+      rescue Board::InvalidMove
+        display_invalid_move_message
+      end
+    end
+  end
+
+  def display_next_move_prompt
+    stdout.puts "\nNext move:"
+  end
+
+  def display_invalid_move_message
+    stdout.puts "Invalid move!"
+  end
+
+  def display_game_result
+    if game.winner != ''
+      stdout.puts "Winner is: #{game.winner}"
+    else
+      stdout.puts 'Game ended in a draw.'
+    end
   end
 end

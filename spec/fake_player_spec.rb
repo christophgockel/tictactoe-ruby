@@ -11,4 +11,10 @@ describe FakePlayer do
     expect(subject.next_move(double)).to eq 2
     expect(subject.next_move(double)).to eq 3
   end
+
+  it 'keeps returning the last element of the list' do
+    expect(subject.next_move(double)).to eq 1
+    expect(subject.next_move(double)).to eq 2
+    expect(subject.next_move(double)).to eq 3
+  end
 end
