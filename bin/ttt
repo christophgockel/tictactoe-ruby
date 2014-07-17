@@ -11,7 +11,7 @@ begin
   x = HumanPlayer.new('x')
   o = ComputerPlayer.new('o')
 
-  game = Game.init(x, o)
+  game = Game.new(x, o)
   ui = CommandlineUI.new(game)
 
   ui.run
