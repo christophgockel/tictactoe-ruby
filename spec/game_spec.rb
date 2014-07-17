@@ -2,10 +2,11 @@ require 'spec_helper'
 
 require 'game'
 require 'board'
+require 'fake_player'
 
 describe Game do
-  let(:player_a) { object_double(FakePlayer.new('a')).as_null_object }
-  let(:player_b) { object_double(FakePlayer.new('b')).as_null_object }
+  let(:player_a) { object_double(FakePlayer.new('a', 5)).as_null_object }
+  let(:player_b) { object_double(FakePlayer.new('b', 4)).as_null_object }
   let(:board)    { instance_double(Board).as_null_object }
   let(:display)  { double.as_null_object }
 
@@ -37,8 +38,8 @@ describe Game do
   end
 
   it 'can only be played until its over' do
-    player_a = FakePlayer.new('a')
-    player_b = FakePlayer.new('b')
+    player_a = FakePlayer.new('a', 5)
+    player_b = FakePlayer.new('b', 4)
 
     game = Game.init(player_a, player_b, board_with('aabababba'))
 
@@ -47,8 +48,8 @@ describe Game do
 
 
   it 'can return the winner of a game' do
-    player_a = FakePlayer.new('a')
-    player_b = FakePlayer.new('b')
+    player_a = FakePlayer.new('a', 5)
+    player_b = FakePlayer.new('b', 4)
 
     game = Game.init(player_a, player_b, board_with('aaa      '))
 
@@ -148,28 +149,10 @@ describe Game do
 
     def dummy_game_with(board_content)
       board = board_with(board_content)
-      player_a = FakePlayer.new('a')
-      player_b = FakePlayer.new('b')
+      player_a = FakePlayer.new('a', 5)
+      player_b = FakePlayer.new('b', 4)
 
       Game.new([player_a, player_b], board, display)
     end
   end
-end
-
-class FakePlayer
-  attr_reader :mark
-
-  def initialize(mark, next_move = 5)
-    @mark = mark
-    @next_move = next_move
-  end
-
-  def next_move(board)
-    @next_move
-  end
-end
-
-describe FakePlayer do
-  subject { described_class.new('x') }
-  it_should_behave_like 'a player'
 end

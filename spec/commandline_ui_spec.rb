@@ -2,6 +2,7 @@ require 'spec_helper'
 
 require 'commandline_ui'
 require 'game'
+require 'fake_player'
 
 describe CommandlineUI do
   it 'displays the board when started' do
@@ -52,18 +53,5 @@ describe CommandlineUI do
     ui.run
 
     expect(output.string.include?('Winner is: b')).to eq true
-  end
-end
-
-class FakePlayer
-  attr_reader :mark
-
-  def initialize(mark, *next_moves)
-    @mark = mark
-    @next_moves = next_moves
-  end
-
-  def next_move(board)
-    @next_moves.pop
   end
 end
