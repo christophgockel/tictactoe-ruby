@@ -85,7 +85,7 @@ class Board
   end
 
   def out_of_bounds?(location)
-    location <= 0 || location > (SIZE ** 2)
+    free_locations.include?(location) == false
   end
 
   def already_occupied?(location)
