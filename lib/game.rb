@@ -1,7 +1,7 @@
 require 'board'
 
 class Game
-  attr_reader :players, :board, :display
+  attr_reader :players, :board, :display, :round_could_be_played
 
   class Over < RuntimeError
   end
@@ -9,6 +9,7 @@ class Game
   def initialize(player_a, player_b, board = nil)
     @players = [player_a, player_b]
     @board   = board || Board.new
+    @round_could_be_played = false
   end
 
   def play_next_round
@@ -16,6 +17,9 @@ class Game
 
     place_move_of(players.first)
     switch_players
+    @round_could_be_played = true
+  rescue Board::InvalidMove
+    @round_could_be_played = false
   end
 
   def is_ongoing?

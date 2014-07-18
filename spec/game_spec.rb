@@ -65,5 +65,21 @@ describe Game do
       expect(board).to receive(:set_move).with(1, player_a.mark)
       game.play_next_round
     end
+
+    it 'can be asked whether the round could be played' do
+      player_a = FakePlayer.new('a', 1)
+      expect(player_a).to receive(:next_move).and_call_original
+      game = Game.new(player_a, player_b, board_with('baba bbaa'))
+      game.play_next_round
+      expect(game.round_could_be_played).to eq false
+    end
+
+    it 'can be asked whether the round could be played - 2' do
+      player_a = FakePlayer.new('a', 5)
+      expect(player_a).to receive(:next_move).and_call_original
+      game = Game.new(player_a, player_b, board_with('baba bbaa'))
+      game.play_next_round
+      expect(game.round_could_be_played).to eq true
+    end
   end
 end
