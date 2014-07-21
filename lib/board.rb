@@ -37,11 +37,11 @@ class Board
   end
 
   def has_winner?
-    winning_constellations.any? { |row| row.uniq.length == 1 && row.all? }
+    winning_combinations.any? { |row| row.uniq.length == 1 && row.all? }
   end
 
   def winner?(color)
-    winning_constellations.any? { |row| row.all? { |cell| cell == color } }
+    winning_combinations.any? { |row| row.all? { |cell| cell == color } }
   end
 
   class InvalidMove < ArgumentError; end
@@ -72,7 +72,7 @@ class Board
     end
   end
 
-  def winning_constellations
+  def winning_combinations
     rows + columns + diagonals
   end
 

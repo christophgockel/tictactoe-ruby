@@ -22,9 +22,7 @@ class ComputerPlayer
     best_move = -1
     best_score = -1
 
-    if board.is_completed?
-      return RatedMove.new(score(board, mark), best_move)
-    end
+    return RatedMove.new(score(board, mark), best_move) if board.is_completed?
 
     locations = board.free_locations
 
