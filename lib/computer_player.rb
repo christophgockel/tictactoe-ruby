@@ -9,10 +9,29 @@ class ComputerPlayer
   end
 
   def next_move(board)
-    best_move(board)
+    return best_move(board) if reasonable_sized?(board)
+    return random_move(board)
   end
 
   private
+
+  def reasonable_sized?(board)
+    return true if is_3x3_board?(board)
+    return true if move_does_matter(board)
+    false
+  end
+
+  def is_3x3_board?(board)
+    board.rows.flatten.size == 9
+  end
+
+  def move_does_matter(board)
+    board.moves_made > 5
+  end
+
+  def random_move(board)
+    board.free_locations.sample
+  end
 
   def best_move(board)
     negamax(board, -1, 1, mark).location

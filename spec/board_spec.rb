@@ -97,4 +97,10 @@ describe Board do
       expect(board_with('         ').is_completed?).to eq false
     end
   end
+
+  it 'can have different sizes' do
+    board = Board.new(4)
+    expect(board.free_locations.size).to eq 16
+    expect(board.rows.flatten.size).to eq 16
+  end
 end

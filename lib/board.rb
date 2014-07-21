@@ -1,9 +1,10 @@
 class Board
-  SIZE = 3
-  attr_reader :cells
+  DEFAULT_SIZE = 3
+  attr_reader :cells, :size
 
-  def initialize
-    @cells = Array.new(SIZE * SIZE) { nil }
+  def initialize(size = DEFAULT_SIZE)
+    @size = size
+    @cells = Array.new(size * size) { nil }
   end
 
   def empty?
@@ -47,7 +48,7 @@ class Board
   class InvalidMove < ArgumentError; end
 
   def rows
-    cells.each_slice(SIZE).to_a
+    cells.each_slice(size).to_a
   end
 
   private

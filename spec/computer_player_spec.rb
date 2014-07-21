@@ -1,3 +1,4 @@
+require 'timeout'
 require 'spec_helper'
 
 require 'computer_player'
@@ -170,6 +171,24 @@ RSpec.describe ComputerPlayer do
 
     expect(next_move_for(o).in('  ooxx  x'))
                  .to result_in('o ooxx  x')
+  end
+
+  context '4x4 board' do
+    it 'handles 4x4 boards' do
+      board = board_with('x o x o  ooox   ', 4)
+      computer = ComputerPlayer.new('o', 'x')
+
+      expect(computer.next_move(board)).to eq 9
+    end
+
+    it 'takes < 3 seconds for its initial move' do
+      Timeout::timeout(3) do
+        board = board_with('                ', 4)
+        computer = ComputerPlayer.new('o', 'x')
+
+        computer.next_move(board)
+      end
+    end
   end
 
   def next_move_for(mark)

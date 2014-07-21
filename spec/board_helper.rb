@@ -9,8 +9,8 @@ module BoardHelper
     'b'
   end
 
-  def board_with(contents)
-    board = Board.new
+  def board_with(contents, size = 3)
+    board = Board.new(size)
 
     contents.split('').each_with_index do |symbol, index|
       board.set_move(index + 1, (symbol == ' ' ? nil : symbol))
