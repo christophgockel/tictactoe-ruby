@@ -1,5 +1,6 @@
 require 'human_player'
 require 'computer_player'
+require 'delayed_computer_player'
 require 'game_factory'
 
 describe GameFactory do
@@ -27,7 +28,7 @@ describe GameFactory do
   it 'supports computer vs. computer' do
     game = GameFactory.create_game(:computer_vs_computer)
 
-    expect(game.players.first).to be_a_kind_of ComputerPlayer
-    expect(game.players.last).to be_a_kind_of ComputerPlayer
+    expect(game.players.first).to be_a_kind_of DelayedComputerPlayer
+    expect(game.players.last).to be_a_kind_of DelayedComputerPlayer
   end
 end

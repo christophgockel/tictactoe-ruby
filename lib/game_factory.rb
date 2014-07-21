@@ -1,6 +1,7 @@
 require 'game'
 require 'human_player'
 require 'computer_player'
+require 'delayed_computer_player'
 
 class GameFactory
   def self.create_game(type)
@@ -11,7 +12,7 @@ class GameFactory
     elsif type == :computer_vs_human
       Game.new(ComputerPlayer.new('x', 'o'), HumanPlayer.new('o'))
     elsif type == :computer_vs_computer
-      Game.new(ComputerPlayer.new('x', 'o'), ComputerPlayer.new('o', 'x'))
+      Game.new(DelayedComputerPlayer.new(ComputerPlayer.new('x', 'o')), DelayedComputerPlayer.new(ComputerPlayer.new('o', 'x')))
     end
   end
 end
