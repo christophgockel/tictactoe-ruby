@@ -1,12 +1,17 @@
-class CommandlineUI
-  attr_reader :game, :stdout
+require 'game_factory'
 
-  def initialize(game, stdout = $stdout)
+class CommandlineUI
+  attr_reader :game, :stdout, :stdin
+
+  def initialize(game = nil, stdout = $stdout, stdin = $stdin)
     @game = game
     @stdout = stdout
+    @stdin = stdin
   end
 
   def run
+    ask_for_game_type if no_game_available?
+
     while game.is_ongoing?
       stdout.puts "\e[H\e[2J"
       display_board(game.board)
@@ -16,7 +21,47 @@ class CommandlineUI
     display_game_result
   end
 
-  private
+  def ask_for_game_type
+    stdout.puts 'Available game types:'
+    stdout.puts '  (1) Human vs. Computer'
+    stdout.puts '  (2) Human vs. Human'
+    stdout.puts '  (3) Computer vs. Human'
+    stdout.puts '  (4) Computer vs. Computer'
+
+    @game = GameFactory.create_game(get_game_type)
+  end
+
+  def get_game_type
+    choice = prompt_for_game_type
+    case choice
+    when 1
+      :human_vs_computer
+    when 2
+      :human_vs_human
+    when 3
+      :computer_vs_human
+    when 4
+      :computer_vs_computer
+    end
+  end
+
+  def prompt_for_game_type
+    stdout.puts "Your choice: "
+    choice = 0
+    while is_valid_game_type_choice(choice) == false
+      choice = stdin.gets.chomp.to_i
+      stdout.puts 'Invalid choice' unless is_valid_game_type_choice(choice)
+    end
+    choice
+  end
+
+  def is_valid_game_type_choice(choice)
+    (1..4).include? choice
+  end
+
+  def no_game_available?
+    game.nil?
+  end
 
   def display_board(board)
     content = board.rows.map.with_index do |row, row_index|
