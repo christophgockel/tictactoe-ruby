@@ -1,19 +1,13 @@
 require 'simplecov'
 
+require 'board_helper'
+
 SimpleCov.start do
     add_filter '/spec/'
 end
 
-require 'board'
-
-def board_with(contents)
-  board = Board.new
-
-  contents.split('').each_with_index do |symbol, index|
-    board.set_move(index + 1, (symbol == ' ' ? nil : symbol))
-  end
-
-  board
+RSpec.configure do |c|
+  c.include BoardHelper
 end
 
 shared_context 'a player' do

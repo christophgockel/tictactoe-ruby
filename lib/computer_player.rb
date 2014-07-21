@@ -1,10 +1,11 @@
 class ComputerPlayer
-  attr_reader :mark
+  attr_reader :mark, :opponents_mark
 
   RatedMove = Struct.new(:score, :location)
 
-  def initialize(mark)
+  def initialize(mark, opponents_mark)
     @mark = mark
+    @opponents_mark = opponents_mark
   end
 
   def next_move(board)
@@ -14,12 +15,10 @@ class ComputerPlayer
   private
 
   def best_move(board)
-    move = negamax(board, -1, 1, mark)
-    return move.location
+    negamax(board, -1, 1, mark).location
   end
 
   def negamax(board, alpha, beta, mark)
-    opponent = opponent(mark)
     best_move = -1
     best_score = -1
 
@@ -31,7 +30,7 @@ class ComputerPlayer
 
     locations.each do |location|
       board.set_move(location, mark)
-      score = -negamax(board, -beta, -alpha, opponent).score
+      score = -negamax(board, -beta, -alpha, opponent(mark)).score
       board.unset_move(location)
 
       if score > best_score
@@ -39,24 +38,16 @@ class ComputerPlayer
         best_move = location
       end
 
-      if score > alpha
-        alpha = score
-      end
+      alpha = [score, alpha].max
 
-      if alpha >= beta
-        break
-      end
+      break if alpha >= beta
     end
 
     return RatedMove.new(best_score, best_move)
   end
 
   def opponent(mark)
-    if mark == 'x'
-      'o'
-    else
-      'x'
-    end
+    mark == @mark ? @opponents_mark : @mark
   end
 
   def score(board, mark)
