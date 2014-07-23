@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH << 'lib'
+
+require 'commandline_ui'
+require 'game'
+require 'human_player'
+require 'computer_player'
+
+begin
+  x = HumanPlayer.new('x')
+  o = ComputerPlayer.new('o', 'x')
+  board = Board.new(4)
+  game = Game.new(x, o, board)
+
+  CommandlineUI.new(game).run
+rescue Interrupt
+end

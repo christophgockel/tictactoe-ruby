@@ -6,31 +6,25 @@ class ComputerPlayer
   def initialize(mark, opponents_mark)
     @mark = mark
     @opponents_mark = opponents_mark
+    @initial_moves_made = 0
   end
 
   def next_move(board)
-    return best_move(board) if reasonable_sized?(board)
-    return random_move(board)
+    @initial_moves_made = board.moves_made
+    return random_move(board) if move_doesnt_matter_in(board)
+    return best_move(board)
   end
 
   private
 
-  def reasonable_sized?(board)
-    return true if is_3x3_board?(board)
-    return true if move_does_matter(board)
-    false
-  end
-
-  def is_3x3_board?(board)
-    board.rows.flatten.size == 9
-  end
-
-  def move_does_matter(board)
-    board.moves_made > 5
-  end
-
   def random_move(board)
     board.free_locations.sample
+  end
+
+  def move_doesnt_matter_in(board)
+    return false if board.size <= 3
+
+    board.moves_made < 3
   end
 
   def best_move(board)
@@ -41,7 +35,7 @@ class ComputerPlayer
     best_move = -1
     best_score = -1
 
-    return RatedMove.new(score(board, mark), best_move) if board.is_completed?
+    return RatedMove.new(score(board, mark), best_move) if board_can_be_rated(board)
 
     locations = board.free_locations
 
@@ -61,6 +55,15 @@ class ComputerPlayer
     end
 
     return RatedMove.new(best_score, best_move)
+  end
+
+  def board_can_be_rated(board)
+    board.is_completed? || has_reasonable_state(board)
+  end
+
+  def has_reasonable_state(board)
+    search_depth = board.moves_made - @initial_moves_made
+    search_depth > 3
   end
 
   def opponent(mark)

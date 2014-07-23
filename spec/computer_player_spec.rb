@@ -173,7 +173,7 @@ RSpec.describe ComputerPlayer do
                  .to result_in('o ooxx  x')
   end
 
-  context '4x4 board' do
+  context '4x4 boards' do
     it 'handles 4x4 boards' do
       board = board_with('x o x o  ooox   ', 4)
       computer = ComputerPlayer.new('o', 'x')
@@ -188,6 +188,21 @@ RSpec.describe ComputerPlayer do
 
         computer.next_move(board)
       end
+    end
+
+    it 'handles real world game setups' do
+      board = board_with('oo         ox xx', 4)
+      board = board_with('oo         ox xx', 4)
+      computer = ComputerPlayer.new('o', 'x')
+
+      expect(computer.next_move(board)).to eq 14
+    end
+
+    it 'should block a possible win' do
+      board = board_with('oxoo     x  xxxo', 4)
+      computer = ComputerPlayer.new('o', 'x')
+
+      expect(computer.next_move(board)).to eq 6
     end
   end
 
