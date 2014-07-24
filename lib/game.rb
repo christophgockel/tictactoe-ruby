@@ -6,8 +6,8 @@ class Game
   class Over < RuntimeError
   end
 
-  def initialize(player_a, player_b, board = nil)
-    @players = [player_a, player_b]
+  def initialize(player_one, player_two, board = nil)
+    @players = [player_one, player_two]
     @board   = board || Board.new
     @round_could_be_played = false
   end
