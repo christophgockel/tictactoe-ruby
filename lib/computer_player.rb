@@ -24,7 +24,7 @@ class ComputerPlayer
   def move_doesnt_matter_in(board)
     return false if board.size <= 3
 
-    board.moves_made < 3
+    board.moves_made < 4
   end
 
   def best_move(board)
@@ -63,7 +63,7 @@ class ComputerPlayer
 
   def has_reasonable_state(board)
     search_depth = board.moves_made - @initial_moves_made
-    search_depth > 3
+    search_depth > 5
   end
 
   def opponent(mark)

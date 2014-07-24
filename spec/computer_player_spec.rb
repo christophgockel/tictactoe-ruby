@@ -190,14 +190,6 @@ RSpec.describe ComputerPlayer do
       end
     end
 
-    it 'handles real world game setups' do
-      board = board_with('oo         ox xx', 4)
-      board = board_with('oo         ox xx', 4)
-      computer = ComputerPlayer.new('o', 'x')
-
-      expect(computer.next_move(board)).to eq 14
-    end
-
     it 'should block a possible win' do
       board = board_with('oxoo     x  xxxo', 4)
       computer = ComputerPlayer.new('o', 'x')
