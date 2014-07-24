@@ -1,24 +1,50 @@
+require 'colorize'
+
 require 'game_factory'
 
 class CommandlineUI
-  attr_reader :game, :stdout, :stdin
+  attr_reader :game, :stdout, :stdin, :use_color
+
+  TEMPLATE_3X3 = <<-END.gsub(/^ {4}/, '')
+     1 | 2 | 3
+     --|---|--
+     4 | 5 | 6
+     --|---|--
+     7 | 8 | 9
+  END
+
+  TEMPLATE_4X4 = <<-END.gsub(/^ {4}/, '')
+     1  |  2  |  3  |  4
+    ----|-----|-----|-----
+     5  |  6  |  7  |  8
+    ----|-----|-----|-----
+     9  |  10 |  11 |  12
+    ----|-----|-----|-----
+     13 |  14 |  15 |  16
+  END
 
   def initialize(game = nil, stdout = $stdout, stdin = $stdin)
-    @game = game
-    @stdout = stdout
-    @stdin = stdin
+    @game      = game
+    @stdout    = stdout
+    @stdin     = stdin
+    @use_color = false
   end
 
   def run
     ask_for_game_type if no_game_available?
 
     while game.is_ongoing?
-      stdout.puts "\e[H\e[2J"
       display_board(game.board)
       place_next_move
     end
+    display_board(game.board)
 
     display_game_result
+  end
+
+  def use_colors
+    @use_color = true
+    self
   end
 
   def ask_for_game_type
@@ -64,13 +90,46 @@ class CommandlineUI
   end
 
   def display_board(board)
-    content = board.rows.map.with_index do |row, row_index|
-      row.map.with_index do |cell, column_index|
-        cell || (row_index*row.length) + column_index + 1
-      end.join(' | ')
-    end.join("\n---------\n")
+    stdout.puts "\e[H\e[2J"
 
-    stdout.puts content
+    board_content = board.rows.flatten.each_with_index.map do |cell, index|
+      cell ? cell : index + 1
+    end
+
+    template = template_for(board)
+
+    board_content.each_with_index do |cell, index|
+      replacement = value_for(cell, index)
+      template = template.sub(/(?<= )#{index + 1}/, replacement)
+    end
+
+    stdout.puts colorize(template)
+  end
+
+  def colorize(template)
+    return template unless use_color
+    colored = template.clone
+
+    colored.gsub!(/(\d)/, "\\1".light_black)
+    colored.gsub!(/(#{game.players.first.mark})/, "\\1".green)
+    colored.gsub!(/(#{game.players.last.mark})/, "\\1".magenta)
+    colored
+  end
+
+  def template_for(board)
+    board.size == 3 ? TEMPLATE_3X3.clone : TEMPLATE_4X4.clone
+  end
+
+  def value_for(cell, index)
+    value = ''
+
+    if index >= 9 && cell.to_s.length < 2
+      value = "#{cell} "
+    else
+      value = cell.to_s
+    end
+
+    value
   end
 
   def place_next_move

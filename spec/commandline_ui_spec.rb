@@ -108,4 +108,64 @@ describe CommandlineUI do
       expect(ui.prompt_for_game_type).to eq 2
     end
   end
+
+  context '4x4 boards' do
+    it 'displays initial 4x4 boards properly aligned' do
+      a = FakePlayer.new('a', 1)
+      b = FakePlayer.new('b', 2)
+      board = board_with('                ', 4)
+      game = Game.new(a, b, board)
+      ui = CommandlineUI.new(game, output)
+
+      ui.display_board(board)
+
+      expect(output.string).to include('1  |  2  |  3  |  4')
+      expect(output.string).to include('5  |  6  |  7  |  8')
+      expect(output.string).to include('9  |  10 |  11 |  12')
+      expect(output.string).to include('13 |  14 |  15 |  16')
+    end
+
+    it 'displays 4x4 boards' do
+      a = FakePlayer.new('a', 1)
+      b = FakePlayer.new('b', 2)
+      board = board_with('abcdefghijklmnop', 4)
+      game = Game.new(a, b, board)
+      ui = CommandlineUI.new(game, output)
+
+      ui.display_board(board)
+
+      expect(output.string).to include('a  |  b  |  c  |  d')
+      expect(output.string).to include('e  |  f  |  g  |  h')
+      expect(output.string).to include('i  |  j  |  k  |  l')
+      expect(output.string).to include('m  |  n  |  o  |  p')
+    end
+
+    it 'displays 4x4 boards with content' do
+      a = FakePlayer.new('a', 1)
+      b = FakePlayer.new('b', 2)
+      board = board_with(' x         o    ', 4)
+      game = Game.new(a, b, board)
+      ui = CommandlineUI.new(game, output)
+
+      ui.display_board(board)
+
+      expect(output.string).to include('1  |  x  |  3  |  4')
+      expect(output.string).to include('5  |  6  |  7  |  8')
+      expect(output.string).to include('9  |  10 |  11 |  o ')
+      expect(output.string).to include('13 |  14 |  15 |  16')
+    end
+  end
+
+  it 'can colorize output' do
+    a = FakePlayer.new('a', 1)
+    b = FakePlayer.new('b', 2)
+    board = board_with('         ')
+    game = Game.new(a, b, board)
+    ui = CommandlineUI.new(game, output)
+
+    ui.use_colors
+    ui.display_board(board)
+
+    expect(output.string).to include "\e[0;90;49m1\e[0m | \e[0;90;49m2\e[0m | \e[0;90;49m3\e[0m"
+  end
 end

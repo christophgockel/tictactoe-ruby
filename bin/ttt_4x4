@@ -13,6 +13,6 @@ begin
   board = Board.new(4)
   game = Game.new(x, o, board)
 
-  CommandlineUI.new(game).run
+  CommandlineUI.new(game).use_colors.run
 rescue Interrupt
 end
