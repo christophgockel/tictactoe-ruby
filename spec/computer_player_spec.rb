@@ -13,164 +13,176 @@ RSpec.describe ComputerPlayer do
   let(:x) { 'x' }
   let(:o) { 'o' }
 
-  it 'blocks possible wins for every row' do
-    expect(next_move_for(x).in(' oo      '))
-                 .to result_in('xoo      ')
+  [
+    { initial:  ' oo      ',
+      expected: 'xoo      '},
 
-    expect(next_move_for(x).in('o o      '))
-                 .to result_in('oxo      ')
+    { initial:  'o o      ',
+      expected: 'oxo      '},
 
-    expect(next_move_for(x).in('oo       '))
-                 .to result_in('oox      ')
+    { initial:  'oo       ',
+      expected: 'oox      '},
 
-    expect(next_move_for(x).in('    oo   '))
-                 .to result_in('   xoo   ')
+    { initial:  '    oo   ',
+      expected: '   xoo   '},
 
-    expect(next_move_for(x).in('   o o   '))
-                 .to result_in('   oxo   ')
+    { initial:  '   o o   ',
+      expected: '   oxo   '},
 
-    expect(next_move_for(x).in('   oo    '))
-                 .to result_in('   oox   ')
+    { initial:  '   oo    ',
+      expected: '   oox   '},
 
-    expect(next_move_for(x).in('       oo'))
-                 .to result_in('      xoo')
+    { initial:  '       oo',
+      expected: '      xoo'},
 
-    expect(next_move_for(x).in('      o o'))
-                 .to result_in('      oxo')
+    { initial:  '      o o',
+      expected: '      oxo'},
 
-    expect(next_move_for(x).in('      oo '))
-                 .to result_in('      oox')
+    { initial:  '      oo ',
+      expected: '      oox'},
+  ].each do |boards|
+    it "blocks wins in row for '#{boards[:initial]}'" do
+      expect(next_move_for(x).in(boards[:initial]))
+                   .to result_in(boards[:expected])
+    end
   end
 
-  it 'blocks possible wins for every column' do
-    expect(next_move_for(o).in('   x  x  '))
-                 .to result_in('o  x  x  ')
+  [
+    { initial:  '   x  x  ',
+      expected: 'o  x  x  '},
 
-    expect(next_move_for(o).in('x     x  '))
-                 .to result_in('x  o  x  ')
+    { initial:  'x     x  ',
+      expected: 'x  o  x  '},
 
-    expect(next_move_for(o).in('x  x     '))
-                 .to result_in('x  x  o  ')
+    { initial:  'x  x     ',
+      expected: 'x  x  o  '},
 
-    expect(next_move_for(o).in('    x  x '))
-                 .to result_in(' o  x  x ')
+    { initial:  '    x  x ',
+      expected: ' o  x  x '},
 
-    expect(next_move_for(o).in(' x     x '))
-                 .to result_in(' x  o  x ')
+    { initial:  ' x     x ',
+      expected: ' x  o  x '},
 
-    expect(next_move_for(o).in(' x  x    '))
-                 .to result_in(' x  x  o ')
+    { initial:  ' x  x    ',
+      expected: ' x  x  o '},
 
-    expect(next_move_for(o).in('     x  x'))
-                 .to result_in('  o  x  x')
+    { initial:  '     x  x',
+      expected: '  o  x  x'},
 
-    expect(next_move_for(o).in('  x     x'))
-                 .to result_in('  x  o  x')
+    { initial:  '  x     x',
+      expected: '  x  o  x'},
 
-    expect(next_move_for(o).in('  x  x   '))
-                 .to result_in('  x  x  o')
+    { initial:  '  x  x   ',
+      expected: '  x  x  o'},
+  ].each do |boards|
+    it "blocks wins in column for '#{boards[:initial]}'" do
+      expect(next_move_for(o).in(boards[:initial]))
+                   .to result_in(boards[:expected])
+    end
   end
 
-  it 'blocks possible wins for every diagonale' do
-    expect(next_move_for(o).in('    x   x'))
-                 .to result_in('o   x   x')
+  [
+    { initial:  '    x   x',
+      expected: 'o   x   x'},
 
-    expect(next_move_for(o).in('x       x'))
-                 .to result_in('x   o   x')
+    { initial:  'x       x',
+      expected: 'x   o   x'},
 
-    expect(next_move_for(o).in('x   x    '))
-                 .to result_in('x   x   o')
+    { initial:  'x   x    ',
+      expected: 'x   x   o'},
 
-    expect(next_move_for(x).in('    o o  '))
-                 .to result_in('  x o o  ')
+    { initial:  '    x x  ',
+      expected: '  o x x  '},
 
-    expect(next_move_for(x).in('  o   o  '))
-                 .to result_in('  o x o  ')
+    { initial:  '  x   x  ',
+      expected: '  x o x  '},
 
-    expect(next_move_for(x).in('  o o    '))
-                 .to result_in('  o o x  ')
+    { initial:  '  x x    ',
+      expected: '  x x o  '},
+  ].each do |boards|
+    it "blocks wins in diagonale '#{boards[:initial]}'" do
+      expect(next_move_for(o).in(boards[:initial]))
+                   .to result_in(boards[:expected])
+    end
   end
 
-  it 'wins when possible' do
-    expect(next_move_for(x).in(' xx      '))
-                 .to result_in('xxx      ')
+  [
+    { initial:  ' xx      ',
+      expected: 'xxx      '},
 
-    expect(next_move_for(x).in('x x      '))
-                 .to result_in('xxx      ')
+    { initial:  'x x      ',
+      expected: 'xxx      '},
 
-    expect(next_move_for(x).in('xx       '))
-                 .to result_in('xxx      ')
+    { initial:  'xx       ',
+      expected: 'xxx      '},
 
-    expect(next_move_for(x).in('    xx   '))
-                 .to result_in('   xxx   ')
+    { initial:  '    xx   ',
+      expected: '   xxx   '},
 
-    expect(next_move_for(x).in('   x x   '))
-                 .to result_in('   xxx   ')
+    { initial:  '   x x   ',
+      expected: '   xxx   '},
 
-    expect(next_move_for(x).in('   xx    '))
-                 .to result_in('   xxx   ')
+    { initial:  '   xx    ',
+      expected: '   xxx   '},
 
-    expect(next_move_for(x).in('       xx'))
-                 .to result_in('      xxx')
+    { initial:  '       xx',
+      expected: '      xxx'},
 
-    expect(next_move_for(x).in('      x x'))
-                 .to result_in('      xxx')
+    { initial:  '      x x',
+      expected: '      xxx'},
 
-    expect(next_move_for(x).in('      xx '))
-                 .to result_in('      xxx')
+    { initial:  '      xx ',
+      expected: '      xxx'},
 
-    expect(next_move_for(x).in('   x  x  '))
-                 .to result_in('x  x  x  ')
+    { initial:  '   x  x  ',
+      expected: 'x  x  x  '},
 
-    expect(next_move_for(x).in('x     x  '))
-                 .to result_in('x  x  x  ')
+    { initial:  'x     x  ',
+      expected: 'x  x  x  '},
 
-    expect(next_move_for(x).in('x  x     '))
-                 .to result_in('x  x  x  ')
+    { initial:  'x  x     ',
+      expected: 'x  x  x  '},
 
-    expect(next_move_for(x).in('    x  x '))
-                 .to result_in(' x  x  x ')
+    { initial:  '    x  x ',
+      expected: ' x  x  x '},
 
-    expect(next_move_for(x).in(' x     x '))
-                 .to result_in(' x  x  x ')
+    { initial:  ' x     x ',
+      expected: ' x  x  x '},
 
-    expect(next_move_for(x).in(' x  x    '))
-                 .to result_in(' x  x  x ')
+    { initial:  ' x  x    ',
+      expected: ' x  x  x '},
 
-    expect(next_move_for(x).in('     x  x'))
-                 .to result_in('  x  x  x')
+    { initial:  '     x  x',
+      expected: '  x  x  x'},
 
-    expect(next_move_for(x).in('  x     x'))
-                 .to result_in('  x  x  x')
+    { initial:  '  x     x',
+      expected: '  x  x  x'},
 
-    expect(next_move_for(x).in('  x  x   '))
-                 .to result_in('  x  x  x')
+    { initial:  '  x  x   ',
+      expected: '  x  x  x'},
 
-    expect(next_move_for(x).in('    x   x'))
-                 .to result_in('x   x   x')
+    { initial:  '    x   x',
+      expected: 'x   x   x'},
 
-    expect(next_move_for(x).in('x       x'))
-                 .to result_in('x   x   x')
+    { initial:  'x       x',
+      expected: 'x   x   x'},
 
-    expect(next_move_for(x).in('x   x    '))
-                 .to result_in('x   x   x')
+    { initial:  'x   x    ',
+      expected: 'x   x   x'},
 
-    expect(next_move_for(o).in('    o o  '))
-                 .to result_in('  o o o  ')
+    { initial:  '    x x  ',
+      expected: '  x x x  '},
 
-    expect(next_move_for(o).in('  o   o  '))
-                 .to result_in('  o o o  ')
+    { initial:  '  x   x  ',
+      expected: '  x x x  '},
 
-    expect(next_move_for(o).in('  o o    '))
-                 .to result_in('  o o o  ')
-  end
-
-  it 'blocks moves in real game constellations' do
-    expect(next_move_for(o).in('ox xxo   '))
-                 .to result_in('ox xxo o ')
-
-    expect(next_move_for(o).in('  ooxx  x'))
-                 .to result_in('o ooxx  x')
+    { initial:  '  x x    ',
+      expected: '  x x x  '},
+  ].each do |boards|
+    it "wins when possible '#{boards[:initial]}'" do
+      expect(next_move_for(x).in(boards[:initial]))
+      .to result_in(boards[:expected])
+    end
   end
 
   context '4x4 boards' do
