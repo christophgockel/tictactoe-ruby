@@ -123,8 +123,8 @@ class CommandlineUI
   def value_for(cell, index)
     value = ''
 
-    if index >= 9 && cell.to_s.length < 2
-      value = "#{cell} "
+    if index >= 9
+      value = cell.to_s.ljust(2)
     else
       value = cell.to_s
     end
