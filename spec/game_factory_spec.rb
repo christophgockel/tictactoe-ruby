@@ -31,4 +31,16 @@ describe GameFactory do
     expect(game.players.first).to be_a_kind_of DelayedComputerPlayer
     expect(game.players.last).to be_a_kind_of DelayedComputerPlayer
   end
+
+  it 'can take another class for creating human players' do
+    GameFactory.human_player_class = DummyHumanPlayer
+
+    game = GameFactory.create_game(:human_vs_computer)
+
+    expect(game.players.first).to be_a_kind_of DummyHumanPlayer
+    expect(game.players.last).to be_a_kind_of ComputerPlayer
+  end
+
+  class DummyHumanPlayer < HumanPlayer
+  end
 end

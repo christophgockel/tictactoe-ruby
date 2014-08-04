@@ -4,15 +4,21 @@ require 'computer_player'
 require 'delayed_computer_player'
 
 class GameFactory
+  class << self; attr_accessor :human_player_class end
+  @human_player_class = HumanPlayer
+
   def self.create_game(type)
     if type == :human_vs_computer
-      Game.new(HumanPlayer.new('x'), ComputerPlayer.new('o', 'x'))
+      Game.new(human_player_class.new('x'), ComputerPlayer.new('o', 'x'))
     elsif type == :human_vs_human
-      Game.new(HumanPlayer.new('x'), HumanPlayer.new('o'))
+      Game.new(human_player_class.new('x'), human_player_class.new('o'))
     elsif type == :computer_vs_human
-      Game.new(ComputerPlayer.new('x', 'o'), HumanPlayer.new('o'))
+      Game.new(ComputerPlayer.new('x', 'o'), human_player_class.new('o'))
     elsif type == :computer_vs_computer
-      Game.new(DelayedComputerPlayer.new(ComputerPlayer.new('x', 'o')), DelayedComputerPlayer.new(ComputerPlayer.new('o', 'x')))
+      player_one = DelayedComputerPlayer.new(ComputerPlayer.new('x', 'o'))
+      player_two = DelayedComputerPlayer.new(ComputerPlayer.new('o', 'x'))
+
+      Game.new(player_one, player_two)
     end
   end
 end
