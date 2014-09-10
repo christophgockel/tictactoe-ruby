@@ -10,7 +10,7 @@ class DelayedComputerPlayer
   end
 
   def next_move(board)
-    sleep(2)
+    sleep(1)
     player.next_move(board)
   end
 end
