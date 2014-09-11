@@ -56,6 +56,22 @@ describe GameFactory do
     expect(game.board.size).to eq 3
   end
 
+  it 'returns information about what board sizes are possible' do
+    expect(GameFactory.available_board_sizes).to eq({
+      :board_3x3 => '3x3',
+      :board_4x4 => '4x4'
+    })
+  end
+
+  it 'returns information about what board sizes are possible' do
+    expect(GameFactory.available_game_types).to eq({
+      :human_vs_human       => 'Human vs. Human',
+      :human_vs_computer    => 'Human vs. Computer',
+      :computer_vs_human    => 'Computer vs. Human',
+      :computer_vs_computer => 'Computer vs. Computer'
+    })
+  end
+
   class DummyHumanPlayer < HumanPlayer
   end
 end

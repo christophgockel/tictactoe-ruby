@@ -28,4 +28,20 @@ class GameFactory
       Game.new(player_one, player_two, board)
     end
   end
+
+  def self.available_board_sizes
+    {
+      :board_3x3 => '3x3',
+      :board_4x4 => '4x4'
+    }
+  end
+
+  def self.available_game_types
+    {
+      :human_vs_human       => 'Human vs. Human',
+      :human_vs_computer    => 'Human vs. Computer',
+      :computer_vs_human    => 'Computer vs. Human',
+      :computer_vs_computer => 'Computer vs. Computer'
+    }
+  end
 end

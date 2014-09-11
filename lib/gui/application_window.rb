@@ -30,10 +30,9 @@ class ApplicationWindow < Qt::Widget
   end
 
   def connect_signals
-    connect(@selection_widget.buttons[:human_vs_human], SIGNAL(:clicked), self, SLOT(:start_game))
-    connect(@selection_widget.buttons[:human_vs_computer], SIGNAL(:clicked), self, SLOT(:start_game))
-    connect(@selection_widget.buttons[:computer_vs_human], SIGNAL(:clicked), self, SLOT(:start_game))
-    connect(@selection_widget.buttons[:computer_vs_computer], SIGNAL(:clicked), self, SLOT(:start_game))
+    GameFactory.available_game_types.each do |key, _|
+      connect(@selection_widget.game_type_buttons[key], SIGNAL(:clicked), self, SLOT(:start_game))
+    end
 
     connect(@game_widget.back_button, SIGNAL(:clicked), self, SLOT(:display_menu))
   end
