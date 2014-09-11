@@ -24,7 +24,7 @@ class ApplicationWindow < Qt::Widget
     @selection_widget.show
     @game_widget.hide
 
-    self.setFixedSize(330, 400);
+    self.setFixedSize(330, 300);
 
     connect_signals
   end
