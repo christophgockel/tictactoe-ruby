@@ -43,6 +43,7 @@ class GameSelectionWidget < Qt::Widget
         end
       end
 
+      layout.add_stretch(10)
       layout.addWidget(group_box)
     end
 
