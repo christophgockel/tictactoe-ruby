@@ -37,6 +37,7 @@ describe GameConnector do
     before :each do
       connector.create_game(:human_vs_human)
     end
+
     context 'end of game' do
       it 'knows when x is the winner' do
         allow(connector.game).to receive(:winner).and_return('x')
@@ -48,6 +49,19 @@ describe GameConnector do
         allow(connector.game).to receive(:winner).and_return('o')
         connector.update_status
         expect(connector.status_text).to eq 'Winner is: o.'
+      end
+
+      it 'knows when game ended in draw' do
+        allow(connector.game).to receive(:is_ongoing?).and_return(false)
+        connector.update_status
+        expect(connector.status_text).to eq 'Game ended in draw.'
+      end
+    end
+
+    context 'ongoing game' do
+      it 'knows which player has to move next' do
+        connector.update_status
+        expect(connector.status_text).to eq 'Next move for: x'
       end
     end
   end
@@ -66,7 +80,7 @@ describe GameConnector do
         process.play(3)
       end
 
-      it 'updates the status #play' do
+      it 'updates the status on #play' do
         expect(connector).to receive(:update_status)
         process.play(3)
       end

@@ -109,12 +109,20 @@ class GameConnector
     end
 
     def play(move)
-      @player.next_move_to_play = move
-      game.play_next_round
-      game.play_next_round
+      play_human_move(move)
+      play_computer_move
       @connector.update_status
     rescue Game::Over
       @connector.update_status
+    end
+
+    def play_human_move(move)
+      @player.next_move_to_play = move
+      game.play_next_round
+    end
+
+    def play_computer_move
+      game.play_next_round
     end
   end
 
@@ -139,10 +147,18 @@ class GameConnector
     end
 
     def play(move)
-      @player.next_move_to_play = move if move
-      game.play_next_round
-      game.play_next_round
+      play_human_move(move)
+      play_computer_move
       @connector.update_status
+    end
+
+    def play_human_move(move)
+      @player.next_move_to_play = move
+      game.play_next_round
+    end
+
+    def play_computer_move
+      game.play_next_round
     end
   end
 
