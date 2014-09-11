@@ -1,24 +1,28 @@
 require 'qt'
 
 class GameSelectionWidget < Qt::Widget
-  attr_reader :connector, :buttons
+  attr_reader :connector, :buttons, :board_size_buttons
 
-  slots :set_game_type
+  slots :set_game_type, :set_board_size
 
   def initialize(connector, parent = nil)
     super(parent)
     @connector = connector
+    @board_size_buttons = {}
     @buttons = {}
+    @board_size = :board_3x3
 
     self.layout = Qt::VBoxLayout.new do |layout|
       group_box = Qt::GroupBox.new('Board Size') do |box|
         box.layout = Qt::HBoxLayout.new do |box_layout|
-          button = Qt::RadioButton.new('3x3')
-          button.setChecked true
-          box_layout.addWidget(button)
+          @board_size_buttons[:board_3x3] = Qt::RadioButton.new('3x3')
+          @board_size_buttons[:board_3x3].setChecked true
+          @board_size_buttons[:board_3x3].objectName = :board_3x3.to_s
+          box_layout.addWidget(@board_size_buttons[:board_3x3])
 
-          button = Qt::RadioButton.new('4x4')
-          box_layout.addWidget(button)
+          @board_size_buttons[:board_4x4] = Qt::RadioButton.new('4x4')
+          @board_size_buttons[:board_4x4].objectName = :board_4x4.to_s
+          box_layout.addWidget(@board_size_buttons[:board_4x4])
         end
       end
       layout.addWidget(group_box)
@@ -46,6 +50,9 @@ class GameSelectionWidget < Qt::Widget
       layout.addWidget(group_box, 1)
     end
 
+    connect(@board_size_buttons[:board_3x3], SIGNAL(:clicked), self, SLOT(:set_board_size))
+    connect(@board_size_buttons[:board_4x4], SIGNAL(:clicked), self, SLOT(:set_board_size))
+
     connect(@buttons[:human_vs_human], SIGNAL(:clicked), self, SLOT(:set_game_type))
     connect(@buttons[:human_vs_computer], SIGNAL(:clicked), self, SLOT(:set_game_type))
     connect(@buttons[:computer_vs_human], SIGNAL(:clicked), self, SLOT(:set_game_type))
@@ -54,6 +61,11 @@ class GameSelectionWidget < Qt::Widget
 
   def set_game_type
     @game_type = sender.objectName.to_sym
-    connector.create_game(@game_type)
+
+    connector.create_game(@game_type, @board_size)
+  end
+
+  def set_board_size
+    @board_size = sender.objectName.to_sym
   end
 end

@@ -45,10 +45,12 @@ class ApplicationWindow < Qt::Widget
   def display_game_widget
     @selection_widget.hide
     @game_widget.show
+    self.setFixedSize(330, 400);
   end
 
   def display_menu
     @selection_widget.show
     @game_widget.hide
+    self.setFixedSize(330, 300);
   end
 end

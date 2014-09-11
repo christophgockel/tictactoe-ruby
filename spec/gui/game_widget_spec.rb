@@ -10,6 +10,7 @@ describe GameWidget do
     initialize_qt_runtime
     connector.create_game(:human_vs_human)
     @widget = GameWidget.new(connector)
+    widget.create_grid
   end
 
   it 'starts a new game when shown' do
@@ -18,11 +19,9 @@ describe GameWidget do
   end
 
   it 'reinitializes the grid when shown' do
-    widget.buttons[0].setText('random text')
+    expect(widget).to receive(:create_grid)
 
     widget.show
-
-    expect(widget.buttons[0].text).to eq ''
   end
 
   it 'ends a game when hidden' do
