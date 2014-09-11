@@ -43,8 +43,7 @@ class GameSelectionWidget < Qt::Widget
         end
       end
 
-      layout.add_stretch(10)
-      layout.addWidget(group_box)
+      layout.addWidget(group_box, 1)
     end
 
     connect(@buttons[:human_vs_human], SIGNAL(:clicked), self, SLOT(:set_game_type))
