@@ -14,8 +14,8 @@ class GameConnector
     @status_text  = ''
   end
 
-  def create_game(game_type)
-    @game = GameFactory.create_game(game_type)
+  def create_game(game_type, board_size = :board_3x3)
+    @game = GameFactory.create_game(game_type, board_size)
 
     case game_type
     when :human_vs_human

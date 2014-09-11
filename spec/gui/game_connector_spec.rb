@@ -16,6 +16,11 @@ describe GameConnector do
     end
   end
 
+  it 'can create games with a different board size' do
+    game = connector.create_game(:human_vs_human, :board_4x4)
+    expect(game.board.size).to eq 4
+  end
+
   it 'holds the window title' do
     expect(connector.window_title).not_to be_nil
   end
