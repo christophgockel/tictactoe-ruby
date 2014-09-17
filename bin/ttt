@@ -3,8 +3,18 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'commandline_ui'
+require 'commandline_io'
+require 'game_factory'
 
 begin
-  CommandlineUI.new.use_colors.run
+  display = CommandlineIO.new($stdin, $stdout)
+  ui = CommandlineUI.new(display)
+
+  game_types = GameFactory.available_game_types
+  chosen_type = ui.ask_for_game_mode(game_types)
+
+  game = GameFactory.create_game(game_types[chosen_type], :board_3x3, display)
+
+  ui.play(game)
 rescue Interrupt
 end

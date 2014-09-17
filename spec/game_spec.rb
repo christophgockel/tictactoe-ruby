@@ -7,8 +7,9 @@ require 'fake_player'
 describe Game do
   let(:player_one) { FakePlayer.new('a', 1) }
   let(:player_two) { FakePlayer.new('b', 2) }
-  let(:board)    { board_with('         ') }
-  let(:game)     { Game.new(player_one, player_two, board) }
+  let(:board)      { board_with('         ') }
+  let(:display)    { FakeIO.new }
+  let(:game)       { Game.new(player_one, player_two, board, display) }
 
   context 'rules' do
     it 'switches players for each round' do
@@ -48,7 +49,7 @@ describe Game do
     it 'in each round a player will be asked for its next move' do
       player_one = FakePlayer.new('a', 5)
 
-      game = Game.new(player_one, player_two, board_with('baba bbaa'))
+      game = Game.new(player_one, player_two, board_with('baba bbaa'), display)
       game.play_next_round
 
       expect(player_one.next_move_has_been_called).to be_truthy
@@ -68,7 +69,7 @@ describe Game do
 
     it 'can be asked whether the round could be played' do
       player_one = FakePlayer.new('a', 1)
-      game = Game.new(player_one, player_two, board_with('baba bbaa'))
+      game = Game.new(player_one, player_two, board_with('baba bbaa'), display)
       game.play_next_round
 
       expect(game.round_could_be_played).to eq false
@@ -76,14 +77,92 @@ describe Game do
 
     it 'can be asked whether the round could be played - 2' do
       player_one = FakePlayer.new('a', 5)
-      game = Game.new(player_one, player_two, board_with('baba bbaa'))
+      game = Game.new(player_one, player_two, board_with('baba bbaa'), display)
       game.play_next_round
 
       expect(game.round_could_be_played).to eq true
     end
   end
 
+  context 'uses a display to interact with the outside world' do
+    it 'displays the board when creating a game' do
+      expect(display).to receive(:show_board)
+
+      Game.new(player_one, player_two, board, display)
+    end
+
+    it 'displays the board after every game round' do
+      expect(display).to receive(:show_board).at_least(2).times
+
+      game.play_next_round
+      game.play_next_round
+    end
+
+    it 'announces the next player when creating a game' do
+      expect(display).to receive(:announce_next_player).with(player_one.mark)
+      Game.new(player_one, player_two, board, display)
+    end
+
+    it 'announces the next player after each round' do
+      allow(display).to receive(:announce_next_player)
+
+      game.play_next_round
+
+      expect(display).to have_received(:announce_next_player).with(player_two.mark)
+    end
+
+    it 'does not announce a next player when the game is over' do
+      game = Game.new(player_one, player_two, board_with(' bababbba'), display)
+
+      expect(display).to_not receive(:announce_next_player)
+      game.play_next_round
+    end
+
+    it 'announces the winner when there is one' do
+      game = Game.new(player_one, player_two, board_with(' baabaaab'), display)
+
+      expect(display).to receive(:announce_winner).with('a')
+      game.play_next_round
+    end
+
+    it 'announces a draw' do
+      game = Game.new(player_one, player_two, board_with(' babbaaab'), display)
+
+      expect(display).to receive(:announce_draw)
+      game.play_next_round
+    end
+
+    it 'displays a message on invalid moves' do
+      game = Game.new(player_one, player_two, board_with('b        '), display)
+
+      expect(display).to receive(:show_invalid_move_message)
+      game.play_next_round
+    end
+  end
+
+  context 'FakeDisplay' do
+    subject { FakeIO.new }
+    it_should_behave_like 'a game io object'
+  end
+
   def game_with_board(board_state)
-    Game.new(player_one, player_two, board_with(board_state))
+    Game.new(player_one, player_two, board_with(board_state), display)
+  end
+
+  class FakeIO
+    def show_board(board)
+    end
+
+    def show_invalid_move_message
+    end
+
+    def announce_next_player(mark)
+    end
+
+    def announce_winner(mark)
+    end
+
+    def announce_draw
+    end
   end
 end

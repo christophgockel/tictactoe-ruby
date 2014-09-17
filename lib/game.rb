@@ -6,10 +6,13 @@ class Game
   class Over < RuntimeError
   end
 
-  def initialize(player_one, player_two, board = nil)
+  def initialize(player_one, player_two, board = nil, display = nil)
     @players = [player_one, player_two]
     @board   = board || Board.new
+    @display = display
     @round_could_be_played = false
+
+    update_display
   end
 
   def play_next_round
@@ -17,9 +20,11 @@ class Game
 
     place_move_of(players.first)
     switch_players
+    update_display
     @round_could_be_played = true
   rescue Board::InvalidMove
     @round_could_be_played = false
+    display.show_invalid_move_message
   end
 
   def is_ongoing?
@@ -41,5 +46,17 @@ class Game
 
   def switch_players
     players.reverse!
+  end
+
+  def update_display
+    display.show_board(board)
+
+    if is_ongoing?
+      display.announce_next_player(players.first.mark)
+    elsif winner != ''
+      display.announce_winner(winner)
+    else
+      display.announce_draw
+    end
   end
 end
