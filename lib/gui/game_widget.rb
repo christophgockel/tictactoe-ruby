@@ -1,6 +1,6 @@
 require 'qt'
 
-require 'game_factory'
+require 'player_factory'
 
 class GameWidget < Qt::Widget
   attr_accessor :game, :back_button, :status_label, :buttons, :grid_size

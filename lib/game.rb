@@ -9,6 +9,15 @@ class Game
   class PlayerNotReady < RuntimeError
   end
 
+  def self.available_modes
+    [
+      :human_human,
+      :human_computer,
+      :computer_human,
+      :computer_computer
+    ]
+  end
+
   def initialize(player_one, player_two, board = nil, display = nil)
     @players = [player_one, player_two]
     @board   = board || Board.new

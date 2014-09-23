@@ -1,8 +1,10 @@
 require 'qt'
-require 'game_factory'
+
+require 'board'
+require 'player_factory'
 
 class GameSelectionWidget < Qt::Widget
-  attr_reader :game_type_buttons, :board_size_buttons
+  attr_reader :game_type_buttons, :board_size_buttons, :game_type, :board_size
 
   slots :set_game_type, :set_board_size
 
@@ -15,8 +17,8 @@ class GameSelectionWidget < Qt::Widget
     self.layout = Qt::VBoxLayout.new do |layout|
       group_box = Qt::GroupBox.new('Board Size') do |box|
         box.layout = Qt::HBoxLayout.new do |box_layout|
-          GameFactory.available_board_sizes.each do |key, description|
-            @board_size_buttons[key] = Qt::RadioButton.new(description)
+          Board.available_sizes.each do |key|
+            @board_size_buttons[key] = Qt::RadioButton.new(board_size_text(key.to_s))
             @board_size_buttons[key].objectName = key.to_s
 
             if @board_size_buttons.length == 1
@@ -32,8 +34,8 @@ class GameSelectionWidget < Qt::Widget
 
       group_box = Qt::GroupBox.new('Game Types') do |box|
         box.layout = Qt::VBoxLayout.new do |box_layout|
-          GameFactory.available_game_types.each do |key|
-            @game_type_buttons[key] = Qt::PushButton.new(game_type_text(key.to_s))
+          PlayerFactory.available_player_pairs.each do |key|
+            @game_type_buttons[key] = Qt::PushButton.new(player_pair_text(key.to_s))
             @game_type_buttons[key].objectName = key.to_s
 
             box_layout.addWidget(@game_type_buttons[key])
@@ -61,7 +63,11 @@ class GameSelectionWidget < Qt::Widget
     @board_size = sender.objectName.to_sym
   end
 
-  def game_type_text(game_type)
+  def board_size_text(size_identifier)
+    size_identifier.split('_').last
+  end
+
+  def player_pair_text(game_type)
     game_type.split('_').map{ |e| e.capitalize}.join(' vs. ')
   end
 end

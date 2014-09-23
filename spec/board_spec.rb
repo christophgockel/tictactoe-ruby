@@ -103,4 +103,19 @@ describe Board do
     expect(board.free_locations.size).to eq 16
     expect(board.rows.flatten.size).to eq 16
   end
+
+  context 'board sizes' do
+    {
+      :board_3x3 => 3,
+      :board_4x4 => 4
+    }.each do |key, board_size|
+      it ":#{key} is a valid board size" do
+        expect(Board.available_sizes).to include key
+      end
+
+      it ":#{key} creates new #{board_size}*#{board_size} sized board" do
+        expect(Board.create(key).size).to eq board_size
+      end
+    end
+  end
 end

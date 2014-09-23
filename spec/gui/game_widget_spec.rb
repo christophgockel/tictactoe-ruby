@@ -1,6 +1,8 @@
 require 'spec_helper'
 
-require 'game_factory'
+require 'board'
+require 'game'
+require 'player_factory'
 require 'gui/game_widget'
 
 describe GameWidget do
@@ -41,7 +43,9 @@ describe GameWidget do
     it 'triggers moves by clicking buttons' do
       expect(widget).to receive(:make_move)
 
-      widget.game = GameFactory.create_game(:human_human, :board_3x3, double.as_null_object)
+      board = Board.new
+      players = PlayerFactory.create_pair(:human_human, double.as_null_object)
+      widget.game = Game.new(players.first, players.last, board, double.as_null_object)
       widget.buttons[0].click
     end
 
@@ -66,7 +70,10 @@ describe GameWidget do
 
   context 'grid display' do
     before :each do
-      widget.game = GameFactory.create_game(:human_human, :board_3x3, double.as_null_object)
+      board = Board.new
+      players = PlayerFactory.create_pair(:human_human, double.as_null_object)
+      widget.game = Game.new(players.first, players.last, board, double.as_null_object)
+      #widget.game = GameFactory.create_game(:human_human, :board_3x3, double.as_null_object)
     end
 
     it 'creates a grid of buttons when shown' do

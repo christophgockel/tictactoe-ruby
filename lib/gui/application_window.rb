@@ -2,7 +2,8 @@ require 'qt'
 
 require 'gui/game_selection_widget'
 require 'gui/game_widget'
-require 'game_factory'
+require 'game'
+require 'player_factory'
 
 class ApplicationWindow < Qt::Widget
   slots :display_menu, :start_game
@@ -29,7 +30,7 @@ class ApplicationWindow < Qt::Widget
   end
 
   def connect_signals
-    GameFactory.available_game_types.each do |key, _|
+    PlayerFactory.available_player_pairs.each do |key, _|
       connect(@selection_widget.game_type_buttons[key], SIGNAL(:clicked), self, SLOT(:start_game))
     end
 
@@ -37,7 +38,10 @@ class ApplicationWindow < Qt::Widget
   end
 
   def start_game
-    @game_widget.game = GameFactory.create_game(sender.objectName.to_sym, :board_3x3, @game_widget)
+    board = Board.create(@selection_widget.board_size)
+    players = PlayerFactory.create_pair(@selection_widget.game_type, @game_widget)
+    @game_widget.game = Game.new(players.first, players.last, board, @game_widget)
+
     display_game_widget
   end
 

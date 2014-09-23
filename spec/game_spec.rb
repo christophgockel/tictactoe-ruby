@@ -148,6 +148,17 @@ describe Game do
     end
   end
 
+  context 'creating new games' do
+    it 'knows what game modes are available' do
+      expect(Game.available_modes).to eq([
+        :human_human,
+        :human_computer,
+        :computer_human,
+        :computer_computer
+      ])
+    end
+  end
+
   context 'FakeDisplay' do
     subject { FakeIO.new }
     it_should_behave_like 'a game io object'

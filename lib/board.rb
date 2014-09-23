@@ -2,6 +2,22 @@ class Board
   DEFAULT_SIZE = 3
   attr_reader :cells, :size
 
+  def self.available_sizes
+    [
+      :board_3x3,
+      :board_4x4
+    ]
+  end
+
+  def self.create(board_size)
+    case board_size
+    when :board_3x3
+      Board.new(3)
+    when :board_4x4
+      Board.new(4)
+    end
+  end
+
   def initialize(size = DEFAULT_SIZE)
     @size = size
     @cells = Array.new(size * size) { nil }

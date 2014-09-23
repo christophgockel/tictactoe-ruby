@@ -4,16 +4,20 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'commandline_ui'
 require 'commandline_io'
-require 'game_factory'
+require 'player_factory'
+require 'game'
+require 'board'
 
 begin
   display = CommandlineIO.new($stdin, $stdout)
   ui = CommandlineUI.new(display)
 
-  game_types = GameFactory.available_game_types
+  game_types = PlayerFactory.available_player_pairs
   chosen_type = ui.ask_for_game_mode(game_types)
 
-  game = GameFactory.create_game(game_types[chosen_type], :board_3x3, display)
+  players = PlayerFactory.create_pair(game_types[chosen_type], display)
+  board = Board.create(:board_3x3)
+  game = Game.new(players.first, players.last, board, display)
 
   ui.play(game)
 rescue Interrupt

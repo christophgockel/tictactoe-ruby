@@ -1,5 +1,3 @@
-require 'game_factory'
-
 class CommandlineUI
   attr_reader :display, :game_modes, :game, :use_color
 

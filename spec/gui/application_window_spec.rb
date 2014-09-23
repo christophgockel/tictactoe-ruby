@@ -34,7 +34,7 @@ describe ApplicationWindow do
     application.display_menu
   end
 
-  context '#start_game' do
+  xcontext '#start_game' do
     it 'displays the game widget' do
       allow(application).to receive(:sender).and_return(FakeSelectionSignal.new)
       expect_any_instance_of(GameWidget).to receive(:show)
