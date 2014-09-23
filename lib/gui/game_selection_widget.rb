@@ -2,13 +2,12 @@ require 'qt'
 require 'game_factory'
 
 class GameSelectionWidget < Qt::Widget
-  attr_reader :connector, :game_type_buttons, :board_size_buttons
+  attr_reader :game_type_buttons, :board_size_buttons
 
   slots :set_game_type, :set_board_size
 
-  def initialize(connector, parent = nil)
+  def initialize(parent = nil)
     super(parent)
-    @connector = connector
 
     @board_size_buttons = {}
     @game_type_buttons = {}
@@ -31,10 +30,10 @@ class GameSelectionWidget < Qt::Widget
       end
       layout.addWidget(group_box)
 
-      group_box = Qt::GroupBox.new('Game Modes') do |box|
+      group_box = Qt::GroupBox.new('Game Types') do |box|
         box.layout = Qt::VBoxLayout.new do |box_layout|
-          GameFactory.available_game_types.each do |key, description|
-            @game_type_buttons[key] = Qt::PushButton.new(description)
+          GameFactory.available_game_types.each do |key|
+            @game_type_buttons[key] = Qt::PushButton.new(game_type_text(key.to_s))
             @game_type_buttons[key].objectName = key.to_s
 
             box_layout.addWidget(@game_type_buttons[key])
@@ -56,11 +55,13 @@ class GameSelectionWidget < Qt::Widget
 
   def set_game_type
     @game_type = sender.objectName.to_sym
-
-    connector.create_game(@game_type, @board_size)
   end
 
   def set_board_size
     @board_size = sender.objectName.to_sym
+  end
+
+  def game_type_text(game_type)
+    game_type.split('_').map{ |e| e.capitalize}.join(' vs. ')
   end
 end

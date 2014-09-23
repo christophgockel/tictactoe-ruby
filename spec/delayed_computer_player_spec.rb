@@ -22,4 +22,8 @@ describe DelayedComputerPlayer do
 
     expect(subject).to have_received(:sleep)
   end
+
+  it 'is always ready' do
+    expect(subject.ready?).to eq true
+  end
 end

@@ -6,6 +6,9 @@ class Game
   class Over < RuntimeError
   end
 
+  class PlayerNotReady < RuntimeError
+  end
+
   def initialize(player_one, player_two, board = nil, display = nil)
     @players = [player_one, player_two]
     @board   = board || Board.new
@@ -25,6 +28,9 @@ class Game
   rescue Board::InvalidMove
     @round_could_be_played = false
     display.show_invalid_move_message
+  rescue PlayerNotReady
+    @round_could_be_played = false
+    raise
   end
 
   def is_ongoing?
@@ -40,6 +46,8 @@ class Game
   private
 
   def place_move_of(player)
+    raise PlayerNotReady.new unless player.ready?
+
     move = player.next_move(board)
     board.set_move(move, player.mark)
   end

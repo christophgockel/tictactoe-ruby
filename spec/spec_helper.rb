@@ -18,6 +18,10 @@ shared_context 'a player' do
   it 'can provide the next move' do
     expect(subject).to respond_to(:next_move).with(1).arguments
   end
+
+  it 'can be asked if it is ready to provide a move' do
+    expect(subject).to respond_to(:ready?)
+  end
 end
 
 shared_context 'a game io object' do
@@ -39,5 +43,13 @@ shared_context 'a game io object' do
 
   it 'can announce a draw' do
     expect(subject).to respond_to(:announce_draw).with(0).arguments
+  end
+
+  it 'can return the next move' do
+    expect(subject).to respond_to(:next_move)
+  end
+
+  it 'tells whether it is ready to provide a new move' do
+    expect(subject).to respond_to(:can_provide_next_move?)
   end
 end

@@ -15,6 +15,10 @@ class FakePlayer
     @next_moves.shift
   end
 
+  def ready?
+    true
+  end
+
   def next_move_has_been_called
     next_move_calls > 0
   end

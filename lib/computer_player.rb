@@ -15,6 +15,10 @@ class ComputerPlayer
     return best_move(board)
   end
 
+  def ready?
+    true
+  end
+
   private
 
   def random_move(board)

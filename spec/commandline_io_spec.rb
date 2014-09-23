@@ -9,10 +9,6 @@ describe CommandlineIO do
   let(:output)  { StringIO.new }
   let(:display) { CommandlineIO.new(input, output) }
 
-  before :each do
-    allow(display).to receive(:clear_screen).and_return(nil)
-  end
-
   context 'board contents' do
     it 'shows indexes on empty spots in board' do
       display.show_board(board_with('         '))
@@ -65,6 +61,17 @@ describe CommandlineIO do
       display.show_invalid_move_message
 
       expect(output.string).to include('Invalid move')
+    end
+  end
+
+  context 'next moves' do
+    it 'provides the next move from stdin' do
+      input.string = "42\n"
+      expect(display.next_move).to eq 42
+    end
+
+    it 'is always ready to provide a new move' do
+      expect(display.can_provide_next_move?).to eq true
     end
   end
 

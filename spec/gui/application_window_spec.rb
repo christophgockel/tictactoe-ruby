@@ -1,5 +1,4 @@
 require 'gui/application_window'
-require 'gui/game_connector'
 
 describe ApplicationWindow do
   attr_reader :application
@@ -37,9 +36,16 @@ describe ApplicationWindow do
 
   context '#start_game' do
     it 'displays the game widget' do
+      allow(application).to receive(:sender).and_return(FakeSelectionSignal.new)
       expect_any_instance_of(GameWidget).to receive(:show)
 
       application.start_game
+    end
+
+    class FakeSelectionSignal
+      def objectName
+        'human_human'
+      end
     end
   end
 end

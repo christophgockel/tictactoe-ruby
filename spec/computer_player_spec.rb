@@ -210,6 +210,10 @@ RSpec.describe ComputerPlayer do
     end
   end
 
+  it 'is always ready' do
+    expect(subject.ready?).to eq true
+  end
+
   def next_move_for(mark)
     BoardHelper::Builder.new(ComputerPlayer.new(mark, mark == x ? o : x))
   end

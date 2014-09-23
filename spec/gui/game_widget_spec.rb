@@ -1,21 +1,19 @@
+require 'spec_helper'
+
+require 'game_factory'
 require 'gui/game_widget'
-require 'gui/game_connector'
 
 describe GameWidget do
+  subject { @widget }
+  it_should_behave_like 'a game io object'
   attr_reader :widget
-
-  let(:connector) { GameConnector.new }
 
   before :each do
     initialize_qt_runtime
-    connector.create_game(:human_vs_human)
-    @widget = GameWidget.new(connector)
+    @widget = GameWidget.new()
+    widget.game = double.as_null_object
+    widget.grid_size = 3
     widget.create_grid
-  end
-
-  it 'starts a new game when shown' do
-    expect(connector).to receive(:start_game)
-    widget.show
   end
 
   it 'reinitializes the grid when shown' do
@@ -24,40 +22,69 @@ describe GameWidget do
     widget.show
   end
 
-  it 'ends a game when hidden' do
-    expect(connector).to receive(:end_game)
-    widget.hide
+  it 'announces next player' do
+    widget.announce_next_player('A')
+    expect(widget.status_label.text).to include 'Next move'
   end
 
-  it '#make_move sends the move to the connector' do
-    allow(@widget).to receive(:sender).and_return(FakeSignal.new)
-
-    widget.make_move
+  it 'announces the winner' do
+    widget.announce_winner('B')
+    expect(widget.status_label.text).to include 'Winner'
   end
 
-  it 'updates the grid with game-board contents' do
-    allow(connector).to receive(:board_state).and_return(['x', 'x', 'x',
-                                                          'o', 'x', 'o',
-                                                          'o', 'o', 'x'])
-
-    widget.update_grid
-    expect(widget.buttons[0].text).to eq 'x'
-    expect(widget.buttons[6].text).to eq 'o'
+  it 'announces a draw' do
+    widget.announce_draw
+    expect(widget.status_label.text).to include 'draw'
   end
 
-  it 'updates the buttons text with a player mark when clicking it' do
-    first_player_mark = connector.game.players.first.mark
-    widget.buttons[0].clicked()
-    expect(widget.buttons[0].text).to eq first_player_mark
+  context 'move handling' do
+    it 'triggers moves by clicking buttons' do
+      expect(widget).to receive(:make_move)
+
+      widget.game = GameFactory.create_game(:human_human, :board_3x3, double.as_null_object)
+      widget.buttons[0].click
+    end
+
+    it 'uses buttons to provide the next move' do
+      allow(widget).to receive(:sender).and_return(FakeSignal.new)
+      widget.make_move
+
+      expect(widget.next_move).to eq 3
+    end
+
+    it 'can provide a move when a button is clicked' do
+      allow(widget).to receive(:sender).and_return(FakeSignal.new)
+      widget.buttons[0].click
+
+      expect(widget.can_provide_next_move?).to eq true
+    end
+
+    it 'can not provide a move until a button is clicked' do
+      expect(widget.can_provide_next_move?).to eq false
+    end
   end
 
-  it 'does not update button texts after game is over' do
-    allow(connector).to receive(:game_is_ongoing?).and_return(false)
+  context 'grid display' do
+    before :each do
+      widget.game = GameFactory.create_game(:human_human, :board_3x3, double.as_null_object)
+    end
 
-    widget.buttons[0].clicked()
-    widget.buttons[1].clicked()
+    it 'creates a grid of buttons when shown' do
+      widget.show
+      expect(widget.buttons.length).to eq 9
+    end
 
-    expect(widget.buttons[1].text).to be_nil
+    it 'removes buttons when hidden' do
+      widget.hide
+      expect(widget.buttons.length).to eq 0
+    end
+
+    it 'displays board content in button texts' do
+      widget.create_grid
+      widget.show_board(board_with('xxxoooxxx'))
+
+      expect(widget.buttons[0].text).to eq 'x'
+    end
   end
 
   def initialize_qt_runtime

@@ -8,9 +8,6 @@ class GameFactory
   class UnknownGameType < RuntimeError
   end
 
-  class << self; attr_accessor :human_player_class end
-  @human_player_class = HumanPlayer
-
   def self.create_game(type, board_size = :board_3x3, display)
     if board_size == :board_4x4
       board = Board.new(4)
@@ -19,11 +16,11 @@ class GameFactory
     end
 
     if type == :human_computer
-      Game.new(human_player_class.new('x'), ComputerPlayer.new('o', 'x'), board, display)
+      Game.new(HumanPlayer.new('x', display), ComputerPlayer.new('o', 'x'), board, display)
     elsif type == :human_human
-      Game.new(human_player_class.new('x'), human_player_class.new('o'), board, display)
+      Game.new(HumanPlayer.new('x', display), HumanPlayer.new('o', display), board, display)
     elsif type == :computer_human
-      Game.new(ComputerPlayer.new('x', 'o'), human_player_class.new('o'), board, display)
+      Game.new(ComputerPlayer.new('x', 'o'), HumanPlayer.new('o', display), board, display)
     elsif type == :computer_computer
       player_one = DelayedComputerPlayer.new(ComputerPlayer.new('x', 'o'))
       player_two = DelayedComputerPlayer.new(ComputerPlayer.new('o', 'x'))

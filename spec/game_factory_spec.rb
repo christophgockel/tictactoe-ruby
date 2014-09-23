@@ -40,15 +40,6 @@ describe GameFactory do
     }.to raise_error GameFactory::UnknownGameType
   end
 
-  it 'can take another class for creating human players' do
-    GameFactory.human_player_class = DummyHumanPlayer
-
-    game = GameFactory.create_game(:human_computer, :board_3x3, display)
-
-    expect(game.players.first).to be_a_kind_of DummyHumanPlayer
-    expect(game.players.last).to be_a_kind_of ComputerPlayer
-  end
-
   it 'can build games with a 3x3 board' do
     game = GameFactory.create_game(:human_human, :board_3x3, display)
     expect(game.board.size).to eq 3
@@ -78,8 +69,5 @@ describe GameFactory do
       :computer_human,
       :computer_computer
     ])
-  end
-
-  class DummyHumanPlayer < HumanPlayer
   end
 end

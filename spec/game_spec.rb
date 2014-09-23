@@ -68,19 +68,27 @@ describe Game do
     end
 
     it 'can be asked whether the round could be played' do
-      player_one = FakePlayer.new('a', 1)
-      game = Game.new(player_one, player_two, board_with('baba bbaa'), display)
-      game.play_next_round
-
-      expect(game.round_could_be_played).to eq false
-    end
-
-    it 'can be asked whether the round could be played - 2' do
       player_one = FakePlayer.new('a', 5)
       game = Game.new(player_one, player_two, board_with('baba bbaa'), display)
       game.play_next_round
 
       expect(game.round_could_be_played).to eq true
+    end
+
+    it 'throws exception if player is not ready' do
+      player_one = FakePlayer.new('a', 5)
+      allow(player_one).to receive(:ready?).and_return(false)
+      game = Game.new(player_one, player_two, board_with('         '), display)
+
+      expect { game.play_next_round }.to raise_error Game::PlayerNotReady
+    end
+
+    it 'if player is not ready round can not be played' do
+      player_one = FakePlayer.new('a', 5)
+      allow(player_one).to receive(:ready?).and_return(false)
+      game = Game.new(player_one, player_two, board_with('         '), display)
+
+      expect(game.round_could_be_played).to eq false
     end
   end
 
@@ -163,6 +171,12 @@ describe Game do
     end
 
     def announce_draw
+    end
+
+    def next_move
+    end
+
+    def can_provide_next_move?
     end
   end
 end

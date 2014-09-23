@@ -2,7 +2,7 @@ require 'qt'
 
 require 'gui/game_selection_widget'
 require 'gui/game_widget'
-require 'gui/game_connector'
+require 'game_factory'
 
 class ApplicationWindow < Qt::Widget
   slots :display_menu, :start_game
@@ -10,11 +10,10 @@ class ApplicationWindow < Qt::Widget
   def initialize(parent = nil)
     super(parent)
 
-    connector = GameConnector.new
-    self.window_title = connector.window_title
+    self.window_title = 'Tic Tac Toe'
 
-    @selection_widget = GameSelectionWidget.new(connector, self)
-    @game_widget = GameWidget.new(connector, self)
+    @selection_widget = GameSelectionWidget.new(self)
+    @game_widget = GameWidget.new(self)
 
     self.layout = Qt::VBoxLayout.new
 
@@ -38,6 +37,7 @@ class ApplicationWindow < Qt::Widget
   end
 
   def start_game
+    @game_widget.game = GameFactory.create_game(sender.objectName.to_sym, :board_3x3, @game_widget)
     display_game_widget
   end
 

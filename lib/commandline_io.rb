@@ -72,6 +72,14 @@ class CommandlineIO
     input.gets.to_i
   end
 
+  def next_move
+    input.gets.to_i
+  end
+
+  def can_provide_next_move?
+    true
+  end
+
   private
 
   def template_for(board)

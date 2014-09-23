@@ -13,4 +13,8 @@ class DelayedComputerPlayer
     sleep(1)
     player.next_move(board)
   end
+
+  def ready?
+    true
+  end
 end
