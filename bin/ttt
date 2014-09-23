@@ -12,11 +12,14 @@ begin
   display = CommandlineIO.new($stdin, $stdout)
   ui = CommandlineUI.new(display)
 
+  board_sizes = Board.available_sizes
+  chosen_size = ui.ask_for_board_size(board_sizes)
+  board = Board.create(board_sizes[chosen_size])
+
   game_types = PlayerFactory.available_player_pairs
   chosen_type = ui.ask_for_game_mode(game_types)
-
   players = PlayerFactory.create_pair(game_types[chosen_type], display)
-  board = Board.create(:board_3x3)
+
   game = Game.new(players.first, players.last, board, display)
 
   ui.play(game)

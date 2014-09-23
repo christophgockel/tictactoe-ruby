@@ -55,6 +55,14 @@ class CommandlineIO
     end
   end
 
+  def show_board_sizes(sizes)
+    output.puts "Available board sizes:"
+
+    sizes.each_with_index do |size_identifier, index|
+      output.puts " (#{index + 1}) #{size_description(size_identifier)}"
+    end
+  end
+
   def announce_next_player(mark)
     output.puts "\nNext move for #{mark}: "
   end
@@ -104,5 +112,9 @@ class CommandlineIO
 
   def mode_name(mode)
     mode.to_s.split('_').map { |e| e.capitalize }.join(' vs. ')
+  end
+
+  def size_description(identifier)
+    identifier.to_s.split('_').last
   end
 end

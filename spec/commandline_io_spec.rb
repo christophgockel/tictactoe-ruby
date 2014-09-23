@@ -113,13 +113,26 @@ describe CommandlineIO do
     end
   end
 
-  context 'game mode prompt' do
+  context 'option selection' do
     it 'asks for a choice' do
       allow(input).to receive(:gets).and_return("2")
       expect(output).to receive(:puts).with("Your choice: ")
       choice = display.prompt_for_choice
 
       expect(choice).to eq(2)
+    end
+  end
+
+  context 'board size selection' do
+    it 'presents a list of available board sizes' do
+      display.show_board_sizes([
+        :board_3x3,
+        :board_4x4
+      ])
+
+      expect(output.string).to include 'Available board sizes'
+      expect(output.string).to include '(1) 3x3'
+      expect(output.string).to include '(2) 4x4'
     end
   end
 end
