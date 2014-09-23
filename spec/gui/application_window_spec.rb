@@ -1,43 +1,44 @@
+require 'qt'
+
 require 'gui/application_window'
+require 'gui/game_selection_widget'
+require 'gui/game_widget'
 
 describe ApplicationWindow do
-  attr_reader :application
+  attr_reader :application, :selection_widget, :game_widget
 
   before :each do
     initialize_qt_runtime
-    @application = ApplicationWindow.new
+    @selection_widget = GameSelectionWidget.new
+    @game_widget      = GameWidget.new
+    @application      = ApplicationWindow.new(@selection_widget, @game_widget)
   end
 
   def initialize_qt_runtime
     Qt::Application.new(ARGV)
   end
 
-  it 'contains selection widget' do
-    expect(application.children.any? { |child| child.kind_of? GameSelectionWidget }).to eq true
-  end
-
-  it 'contains game widget' do
-    expect(application.children.any? { |child| child.kind_of? GameWidget }).to eq true
-  end
-
   it 'can switch to its game widget' do
-    expect_any_instance_of(GameWidget).to receive(:show)
-    expect_any_instance_of(GameSelectionWidget).to receive(:hide)
+    expect(game_widget).to receive(:show)
+    expect(selection_widget).to receive(:hide)
 
     application.display_game_widget
   end
 
   it 'can switch to its selection widget' do
-    expect_any_instance_of(GameWidget).to receive(:hide)
-    expect_any_instance_of(GameSelectionWidget).to receive(:show)
+    expect(game_widget).to receive(:hide)
+    expect(selection_widget).to receive(:show)
 
     application.display_menu
   end
 
-  xcontext '#start_game' do
+  context '#start_game' do
     it 'displays the game widget' do
       allow(application).to receive(:sender).and_return(FakeSelectionSignal.new)
-      expect_any_instance_of(GameWidget).to receive(:show)
+      allow(selection_widget).to receive(:board_size).and_return(:board_3x3)
+      allow(selection_widget).to receive(:game_type).and_return(:human_human)
+
+      expect(game_widget).to receive(:show)
 
       application.start_game
     end

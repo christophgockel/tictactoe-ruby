@@ -1,20 +1,18 @@
 require 'qt'
 
-require 'gui/game_selection_widget'
-require 'gui/game_widget'
 require 'game'
 require 'player_factory'
 
 class ApplicationWindow < Qt::Widget
   slots :display_menu, :start_game
 
-  def initialize(parent = nil)
-    super(parent)
+  def initialize(selection_widget, game_widget)
+    super(nil)
 
     self.window_title = 'Tic Tac Toe'
 
-    @selection_widget = GameSelectionWidget.new(self)
-    @game_widget = GameWidget.new(self)
+    @selection_widget = selection_widget
+    @game_widget = game_widget
 
     self.layout = Qt::VBoxLayout.new
 

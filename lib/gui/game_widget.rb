@@ -25,6 +25,7 @@ class GameWidget < Qt::Widget
 
     create_grid
     play_game
+    @next_move = 0
   end
 
   def hide
@@ -105,10 +106,8 @@ class GameWidget < Qt::Widget
     return if !@game_thread.nil? && @game_thread.alive?
 
     @game_thread = Thread.new do
-      begin
-        while game.is_ongoing?
-          game.play_next_round
-        end
+      while game.is_ongoing?
+        game.play_next_round
       end
     end
   end
