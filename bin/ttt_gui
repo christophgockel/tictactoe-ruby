@@ -3,14 +3,14 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'qt'
-require 'gui/application_window'
-require 'gui/game_selection_widget'
-require 'gui/game_widget'
+require 'tictactoe-gui/application_window'
+require 'tictactoe-gui/game_selection_widget'
+require 'tictactoe-gui/game_widget'
 
 begin
   application = Qt::Application.new(ARGV)
 
-  ApplicationWindow.new(GameSelectionWidget.new, GameWidget.new).show
+  TicTacToeGUI::ApplicationWindow.new(TicTacToeGUI::GameSelectionWidget.new, TicTacToeGUI::GameWidget.new).show
 
   application.exec
 rescue Interrupt

@@ -1,13 +1,13 @@
-require 'spec_helper'
+#require 'tictactoe-ui/spec_helper'
 
-require 'commandline_ui'
-require 'commandline_io'
+require 'tictactoe-ui/commandline_ui'
+require 'tictactoe-ui/commandline_io'
 
-describe CommandlineUI do
+describe TicTacToeUI::CommandlineUI do
   let(:output)  { StringIO.new }
   let(:input)   { StringIO.new }
-  let(:display) { CommandlineIO.new(input, output) }
-  let(:ui)      { CommandlineUI.new(display) }
+  let(:display) { TicTacToeUI::CommandlineIO.new(input, output) }
+  let(:ui)      { described_class.new(display) }
   let(:modes)   { [:a, :b, :c] }
   let(:sizes)   { [:_1x1, :_2x2] }
 
@@ -19,14 +19,14 @@ describe CommandlineUI do
     it 'asks the display to show a list of available board sizes' do
       expect(display).to receive(:show_board_sizes).with(sizes)
 
-      ui = CommandlineUI.new(display)
+      ui = described_class.new(display)
       ui.ask_for_board_size(sizes)
     end
 
     it 'accepts input after showing the list of available board sizes' do
       expect(display).to receive(:prompt_for_choice).and_call_original
 
-      ui = CommandlineUI.new(display)
+      ui = described_class.new(display)
       ui.ask_for_board_size(modes)
     end
 
@@ -34,21 +34,21 @@ describe CommandlineUI do
       input.string = "wrong\ninput\n9\n1"
       expect(display).to receive(:prompt_for_choice).exactly(4).times.and_call_original
 
-      ui = CommandlineUI.new(display)
+      ui = described_class.new(display)
       ui.ask_for_board_size(sizes)
     end
 
     it 'asks the display to show a list of available game modes' do
       expect(display).to receive(:show_game_modes).with(modes)
 
-      ui = CommandlineUI.new(display)
+      ui = described_class.new(display)
       ui.ask_for_game_mode(modes)
     end
 
     it 'accepts input after showing the list of available game modes' do
       expect(display).to receive(:prompt_for_choice).and_call_original
 
-      ui = CommandlineUI.new(display)
+      ui = described_class.new(display)
       ui.ask_for_game_mode(modes)
     end
 
@@ -56,7 +56,7 @@ describe CommandlineUI do
       input.string = "wrong\ninput\n9\n1"
       expect(display).to receive(:prompt_for_choice).exactly(4).times.and_call_original
 
-      ui = CommandlineUI.new(display)
+      ui = described_class.new(display)
       ui.ask_for_game_mode(modes)
     end
   end

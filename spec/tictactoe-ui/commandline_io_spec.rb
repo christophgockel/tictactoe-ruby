@@ -1,13 +1,13 @@
-require "spec_helper"
-require "commandline_io"
+require "tictactoe-ui/spec_helper"
+require "tictactoe-ui/commandline_io"
 
-describe CommandlineIO do
+describe TicTacToeUI::CommandlineIO do
   subject { display }
   it_should_behave_like 'a game io object'
 
   let(:input)   { StringIO.new }
   let(:output)  { StringIO.new }
-  let(:display) { CommandlineIO.new(input, output) }
+  let(:display) { described_class.new(input, output) }
 
   context 'board contents' do
     it 'shows indexes on empty spots in board' do

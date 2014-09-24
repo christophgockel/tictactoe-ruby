@@ -1,11 +1,11 @@
-require 'gui/game_selection_widget'
+require 'tictactoe-gui/game_selection_widget'
 
-describe GameSelectionWidget do
+describe TicTacToeGUI::GameSelectionWidget do
   attr_reader :selection_widget
 
   before :each do
     initialize_qt_runtime
-    @selection_widget = GameSelectionWidget.new()
+    @selection_widget = described_class.new()
   end
 
   it '#set_game_type creates a game in the connector' do

@@ -1,17 +1,17 @@
 require 'qt'
 
-require 'gui/application_window'
-require 'gui/game_selection_widget'
-require 'gui/game_widget'
+require 'tictactoe-gui/application_window'
+require 'tictactoe-gui/game_selection_widget'
+require 'tictactoe-gui/game_widget'
 
-describe ApplicationWindow do
+describe TicTacToeGUI::ApplicationWindow do
   attr_reader :application, :selection_widget, :game_widget
 
   before :each do
     initialize_qt_runtime
-    @selection_widget = GameSelectionWidget.new
-    @game_widget      = GameWidget.new
-    @application      = ApplicationWindow.new(@selection_widget, @game_widget)
+    @selection_widget = TicTacToeGUI::GameSelectionWidget.new
+    @game_widget      = TicTacToeGUI::GameWidget.new
+    @application      = described_class.new(@selection_widget, @game_widget)
   end
 
   def initialize_qt_runtime

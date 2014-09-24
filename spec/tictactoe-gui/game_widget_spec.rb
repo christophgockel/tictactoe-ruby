@@ -1,18 +1,18 @@
-require 'spec_helper'
+require 'tictactoe-ui/spec_helper'
 
-require 'board'
-require 'game'
-require 'player_factory'
-require 'gui/game_widget'
+require 'tictactoe/board'
+require 'tictactoe/game'
+require 'tictactoe/player_factory'
+require 'tictactoe-gui/game_widget'
 
-describe GameWidget do
+describe TicTacToeGUI::GameWidget do
   subject { @widget }
   it_should_behave_like 'a game io object'
   attr_reader :widget
 
   before :each do
     initialize_qt_runtime
-    @widget = GameWidget.new()
+    @widget = described_class.new()
     widget.game = double.as_null_object
     widget.grid_size = 3
     widget.create_grid
@@ -43,9 +43,9 @@ describe GameWidget do
     it 'triggers moves by clicking buttons' do
       expect(widget).to receive(:make_move)
 
-      board = Board.new
-      players = PlayerFactory.create_pair(:human_human, double.as_null_object)
-      widget.game = Game.new(players.first, players.last, board, double.as_null_object)
+      board = TicTacToe::Board.new
+      players = TicTacToe::PlayerFactory.create_pair(:human_human, double.as_null_object)
+      widget.game = TicTacToe::Game.new(players.first, players.last, board, double.as_null_object)
       widget.buttons[0].click
     end
 
@@ -70,10 +70,9 @@ describe GameWidget do
 
   context 'grid display' do
     before :each do
-      board = Board.new
-      players = PlayerFactory.create_pair(:human_human, double.as_null_object)
-      widget.game = Game.new(players.first, players.last, board, double.as_null_object)
-      #widget.game = GameFactory.create_game(:human_human, :board_3x3, double.as_null_object)
+      board = TicTacToe::Board.new
+      players = TicTacToe::PlayerFactory.create_pair(:human_human, double.as_null_object)
+      widget.game = TicTacToe::Game.new(players.first, players.last, board, double.as_null_object)
     end
 
     it 'creates a grid of buttons when shown' do

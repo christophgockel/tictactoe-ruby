@@ -1,13 +1,13 @@
 require 'simplecov'
 
-require 'board_helper'
+require 'tictactoe-ui/board_helper'
 
 SimpleCov.start do
     add_filter '/spec/'
 end
 
 RSpec.configure do |c|
-  c.include BoardHelper
+  c.include TicTacToeUI::BoardHelper
 end
 
 shared_context 'a player' do
