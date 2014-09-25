@@ -1,8 +1,8 @@
 GIT
   remote: git@github.com:christophgockel/tictactoe-gem.git
-  revision: 4e306de83457650819eca25466816875383c9c10
+  revision: 5b2368f85c4f382555631c070ec4adc01bcb83dd
   specs:
-    tictactoe (0.0.2)
+    tictactoe (0.0.4)
 
 GEM
   remote: https://rubygems.org/

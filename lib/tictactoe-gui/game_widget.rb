@@ -4,7 +4,7 @@ require 'tictactoe/player_factory'
 
 module TicTacToeGUI
   class GameWidget < Qt::Widget
-    attr_accessor :game, :back_button, :status_label, :buttons, :grid_size
+    attr_accessor :game, :back_button, :status_label, :buttons, :grid_size, :game_thread
 
     slots :make_move, :init_widget, :show
 
@@ -32,7 +32,7 @@ module TicTacToeGUI
     def hide
       super
       clear_grid
-      Thread.kill(@game_thread) if @game_thread
+      Thread.kill(game_thread) if game_thread
     end
 
     def game=(game)
@@ -104,10 +104,10 @@ module TicTacToeGUI
     end
 
     def play_game
-      return if !@game_thread.nil? && @game_thread.alive?
+      return if !game_thread.nil? && game_thread.alive?
 
       @game_thread = Thread.new do
-        while game.is_ongoing?
+        while game.is_playable?
           game.play_next_round
         end
       end

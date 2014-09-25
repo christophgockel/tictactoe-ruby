@@ -66,6 +66,18 @@ describe TicTacToeGUI::GameWidget do
     it 'can not provide a move until a button is clicked' do
       expect(widget.can_provide_next_move?).to eq false
     end
+
+    it 'pauses the game until a new move has been made by the user' do
+      allow(widget).to receive(:sender).and_return(FakeSignal.new)
+      board = TicTacToe::Board.new
+      players = TicTacToe::PlayerFactory.create_pair(:human_human, double.as_null_object)
+      allow(players.first).to receive(:ready?).and_return(false)
+      widget.game = TicTacToe::Game.new(players.first, players.last, board, double.as_null_object)
+      widget.make_move
+      widget.game_thread.join
+
+      expect(widget.game_thread.alive?).to eq false
+    end
   end
 
   context 'grid display' do

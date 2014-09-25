@@ -17,7 +17,7 @@ module TicTacToeUI
     end
 
     def play(game)
-      while game.is_ongoing?
+      while game.is_playable?
         game.play_next_round
       end
     end

@@ -63,14 +63,14 @@ describe TicTacToeUI::CommandlineUI do
     let(:game) { double("Game", :is_ongoing? => false, :play_next_round => nil) }
 
     it 'plays a game until its done' do
-      allow(game).to receive(:is_ongoing?).and_return(true, false)
+      allow(game).to receive(:is_playable?).and_return(true, false)
       ui.play(game)
 
-      expect(game).to have_received(:is_ongoing?).exactly(2).times
+      expect(game).to have_received(:is_playable?).exactly(2).times
     end
 
     it 'plays rounds consecutively' do
-      allow(game).to receive(:is_ongoing?).and_return(true, true, false)
+      allow(game).to receive(:is_playable?).and_return(true, true, false)
       ui.play(game)
 
       expect(game).to have_received(:play_next_round).exactly(2).times
