@@ -1,5 +1,3 @@
-#require 'tictactoe-ui/spec_helper'
-
 require 'tictactoe-ui/commandline_ui'
 require 'tictactoe-ui/commandline_io'
 

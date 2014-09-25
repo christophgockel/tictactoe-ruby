@@ -1,5 +1,5 @@
-require "tictactoe-ui/spec_helper"
-require "tictactoe-ui/commandline_io"
+require 'tictactoe-ui/spec_helper'
+require 'tictactoe-ui/commandline_io'
 
 describe TicTacToeUI::CommandlineIO do
   subject { display }
