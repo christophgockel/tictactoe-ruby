@@ -4,24 +4,9 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'tictactoe-ui/commandline_ui'
 require 'tictactoe-ui/commandline_io'
-require 'tictactoe/player_factory'
-require 'tictactoe/game'
-require 'tictactoe/board'
 
 begin
   display = TicTacToeUI::CommandlineIO.new($stdin, $stdout)
-  ui = TicTacToeUI::CommandlineUI.new(display)
-
-  board_sizes = TicTacToe::Board.available_sizes
-  chosen_size = ui.ask_for_board_size(board_sizes)
-  board = TicTacToe::Board.create(board_sizes[chosen_size])
-
-  game_types = TicTacToe::PlayerFactory.available_player_pairs
-  chosen_type = ui.ask_for_game_mode(game_types)
-  players = TicTacToe::PlayerFactory.create_pair(game_types[chosen_type], display)
-
-  game = TicTacToe::Game.new(players.first, players.last, board, display)
-
-  ui.play(game)
+  TicTacToeUI::CommandlineUI.new(display).setup_and_play
 rescue Interrupt
 end

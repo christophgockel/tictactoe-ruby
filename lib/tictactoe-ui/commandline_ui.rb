@@ -1,9 +1,30 @@
+require 'tictactoe/game'
+require 'tictactoe/board'
+require 'tictactoe/player_factory'
+
 module TicTacToeUI
   class CommandlineUI
     attr_reader :display
 
     def initialize(display)
       @display = display
+    end
+
+    def setup_and_play
+      game = setup
+      play(game)
+    end
+
+    def setup
+      board_sizes = TicTacToe::Board.available_sizes
+      chosen_size = ask_for_board_size(board_sizes)
+      board = TicTacToe::Board.create(board_sizes[chosen_size])
+
+      game_modes = TicTacToe::PlayerFactory.available_player_pairs
+      chosen_mode = ask_for_game_mode(game_modes)
+      players = TicTacToe::PlayerFactory.create_pair(game_modes[chosen_mode], display)
+
+      TicTacToe::Game.new(players.first, players.last, board, display)
     end
 
     def ask_for_board_size(sizes)
